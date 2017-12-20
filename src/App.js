@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import UserForm from './Components/UserForm';
 import UsersTable from './Components/UsersTable';
 import ReviewForm from './Components/ReviewForm';
+import MuiThemeProvider from '../node_modules/material-ui/styles/MuiThemeProvider';
 
 import './App.css';
 
@@ -30,8 +31,14 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
         </div>
-        <UserForm name="Test" onUserFormChange={this.handleUserFormChange} /><br/>
-        <UsersTable users={this.state.urs}/>      
+        <MuiThemeProvider>
+          <UserForm name="Test" onUserFormChange={this.handleUserFormChange} />
+        </MuiThemeProvider>
+        <br/>
+        <br/>
+        <MuiThemeProvider>
+          <UsersTable users={this.state.urs}/>
+        </MuiThemeProvider>      
       </div>
     );
   }

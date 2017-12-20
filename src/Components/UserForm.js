@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import './UserForm.css';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+
 
 class UserForm extends React.Component {
     constructor(props) {
@@ -46,10 +49,10 @@ class UserForm extends React.Component {
         <form onSubmit={this.handleSubmit}>
             User input:
             <div id="userForm">
-                <label>First name: <input value={firstName} name="firstName" type="text" onChange={this.handleInputChange}></input></label><br/>
-                <label>Last name: <input value={lastName} name="lastName" type="text" onChange={this.handleInputChange}></input></label>                
+                <TextField floatingLabelText="First name" value={firstName} name="firstName" onChange={this.handleInputChange}/><br/>                
+                <TextField floatingLabelText="Last name" value={lastName} name="lastName" onChange={this.handleInputChange}/><br/>
             </div>
-            <input type="submit" value="add user"/>
+            <RaisedButton primary={true} label="Add user" type="submit"/>
         </form>   
       );
              
