@@ -6,6 +6,7 @@ export default class UserForm extends React.Component {
       return (
         <div>
             User input:
+            Test.
             <div id="userForm">
                 <div>First name: <input></input></div>
                 <div>Last name: <input></input></div>                
