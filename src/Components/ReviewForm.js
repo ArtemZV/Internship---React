@@ -10,7 +10,7 @@ class ReviewForm extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            selectedUser: this.props.users[0].id,
+            selectedUser: null,
             reviewText: '',
             shwMsg: false
         };        
@@ -22,14 +22,14 @@ class ReviewForm extends React.Component{
     }
     
     handleSubmit(event) {
-        event.preventDefault();  
-        if (this.state.reviewText.trim() == '') return;
+        event.preventDefault();        
         const review = {            
             id: Math.ceil(Math.random()*100),
             reviewText: this.state.reviewText,
-            userId: this.state.selectedUser
+            userId: this.state.selectedUser,
+            isAproved: false
         }    
-        this.setState({reviewText:'',shwMsg: true})
+        this.setState({reviewText:'',shwMsg: true, selectedUser: null})
         this.props.onReviewCreate(review);  
     }
 
@@ -67,6 +67,7 @@ class ReviewForm extends React.Component{
                         onChange={this.handleSelectChange}
                         style={{textAlign: 'left'}}
                     >
+                        <MenuItem value={null} primaryText="" />
                         {selectItems}
                     </SelectField>
                     <br />
@@ -75,6 +76,7 @@ class ReviewForm extends React.Component{
                         name="lastName" 
                         onChange={this.handleInputChange} 
                         multiLine={true}
+                        rowsMax={4}
                         value={this.state.reviewText}
                         style={{textAlign: 'left'}}
                     />
@@ -83,6 +85,7 @@ class ReviewForm extends React.Component{
                     primary={true} 
                     label="Add review" 
                     type="submit"
+                    disabled={this.state.selectedUser == null || this.state.reviewText.trim() == ''}
                 />
                 <Snackbar
                     open={this.state.shwMsg}

@@ -24,8 +24,8 @@ class UserForm extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        if (this.state.firstName.trim() == '' || !this.state.firstName.match(/^[A-Za-zА-ЯЁа-яё\s]+$/) 
-        || this.state.lastName.trim() == '' || !this.state.lastName.match(/^[A-Za-zА-ЯЁа-яё\s]+$/) ) return;
+        if (!this.state.firstName.match(/^[A-Za-zА-ЯЁа-яё\s]+$/) 
+        || !this.state.lastName.match(/^[A-Za-zА-ЯЁа-яё\s]+$/) ) return;
         const user = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
@@ -79,7 +79,7 @@ class UserForm extends React.Component {
                  name="lastName" 
                  onChange={this.handleInputChange}/>
             </div>
-            <RaisedButton primary={true} label="Add user" type="submit"/>
+            <RaisedButton primary={true} label="Add user" type="submit" disabled={firstName.trim() == '' || lastName.trim() == ''}/>
             <Snackbar
                 open={this.state.shwMsg}
                 message={this.state.message}

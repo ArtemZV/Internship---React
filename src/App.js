@@ -13,15 +13,15 @@ const usersArr = [
 ]
 
 const reviewsArr = [
-  {reviewText:'test review 1', id: Math.ceil(Math.random()*100), userId:usersArr[0].id}, 
-  {reviewText: 'test review 2', id: Math.ceil(Math.random()*100), userId:usersArr[0].id},
-  {reviewText:'test review 3', id: Math.ceil(Math.random()*100), userId:usersArr[1].id},
-  {reviewText: 'test review 4', id: Math.ceil(Math.random()*100), userId:usersArr[1].id},
-  {reviewText: 'default review', id: Math.ceil(Math.random()*100), userId:usersArr[2].id}
+  {reviewText:'test review 1', id: Math.ceil(Math.random()*100), userId:usersArr[0].id, isAproved: true}, 
+  {reviewText: 'test review 2', id: Math.ceil(Math.random()*100), userId:usersArr[0].id, isAproved: true},
+  {reviewText:'test review 3', id: Math.ceil(Math.random()*100), userId:usersArr[1].id, isAproved: true},
+  {reviewText: 'test review 4', id: Math.ceil(Math.random()*100), userId:usersArr[1].id, isAproved: true},
+  {reviewText: 'default review', id: Math.ceil(Math.random()*100), userId:usersArr[2].id, isAproved: true}
 ]
 
 const style = {
-  inlineBlock: {display: 'inline-block', width: '50%', marginTop: '10px'},
+  inlineBlock: {display: 'inline-block', width: '50%', marginTop: '10px', verticalAlign: 'top', height: '280px'},
   wideBlock: {width: '80%', marginTop: '15px', marginLeft: 'auto', marginRight: 'auto'}
 }
 
@@ -69,7 +69,7 @@ class App extends Component {
     this.setState((prevState) => {
       prevState.users.splice(index, 1);
       user.reviews.forEach((review) => {prevState.reviews.splice(prevState.reviews.indexOf(review), 1)});
-      return {users: prevState.users, reviews: prevState.reviews, updateUser: prevState.updateUser.id == user.id ? null : prevState.updateUser};
+      return {users: prevState.users, reviews: prevState.reviews, updateUser: (prevState.updateUser && prevState.updateUser.id == user.id) ? null : prevState.updateUser};
     });
   }
 
@@ -87,11 +87,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
+      <div className="App">        
         <div style={style.inlineBlock}>
           <UserForm name="Test" updateUser={this.state.updateUser} onUserFormChange={this.handleUserFormChange} />
         </div>

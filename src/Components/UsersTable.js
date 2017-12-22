@@ -15,8 +15,15 @@ import {
 const style = {    
     deleteBtn: { 
         float: 'right',
-        padding: 0,
-        height: '24px'
+        height: '100%'
+    },
+    tableSpan:{
+        display: 'inline-flex',
+        maxWidth: '350px',
+        wordBreak: 'break-word',
+        whiteSpace: 'normal',
+        alignItems: 'center',
+        height: '100%'
     }
 }
 
@@ -26,9 +33,9 @@ const reviewDeletedMsg = 'Review deleted from table';
 
 function ReviewCell(props){    
     return (
-        <TableRow displayBorder={false}>
+        <TableRow displayBorder={false} style={!props.review.isAproved ? {backgroundColor: '#bbbbbb'} : {}}>
             <TableRowColumn>
-                <span>{props.review.reviewText}</span>    
+                <span style={style.tableSpan}>{props.review.reviewText}</span>    
                 <IconButton style={style.deleteBtn} onClick={() => props.onReviewDelete(props.review)}>
                     <FontIcon className="material-icons">clear</FontIcon>               
                 </IconButton>
@@ -50,10 +57,12 @@ function TableUserRow(props){
     return (
         <TableRow style={props.user.isAdmin ? {backgroundColor:'#69e06e'} : {}}>
             <TableRowColumn style={{fontSize:'18px'}}>
-                <span onClick={props.user.isAdmin ? () => props.onUserUpdate(props.user) : null}>{props.user.name}</span>
-                <IconButton style={style.deleteBtn} onClick={() => props.onUserDelete(props.user)}>
-                    <FontIcon className="material-icons">clear</FontIcon>               
-                </IconButton> 
+                <span style={style.tableSpan}onClick={props.user.isAdmin ? () => props.onUserUpdate(props.user) : null}>{props.user.name}</span>
+                {!props.user.isAdmin &&
+                    <IconButton style={style.deleteBtn} onClick={() => props.onUserDelete(props.user)}>
+                        <FontIcon className="material-icons">clear</FontIcon>               
+                    </IconButton>
+                } 
             </TableRowColumn>
             <TableRowColumn>
                 <Table style={{backgroundColor: 'inherit'}}>
