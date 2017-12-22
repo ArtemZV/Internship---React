@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import UserForm from './Components/UserForm';
 import UsersTable from './Components/UsersTable';
 import ReviewForm from './Components/ReviewForm';

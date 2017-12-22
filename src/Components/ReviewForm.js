@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
@@ -57,6 +57,7 @@ class ReviewForm extends React.Component{
             if (!user.isAdmin) 
             return <MenuItem key={user.id} value={user.id} primaryText={user.name}/>
         }); 
+        
         return (
             <form onSubmit={this.handleSubmit} autoComplete="off">
                 Review input:
@@ -85,7 +86,7 @@ class ReviewForm extends React.Component{
                     primary={true} 
                     label="Add review" 
                     type="submit"
-                    disabled={this.state.selectedUser == null || this.state.reviewText.trim() == ''}
+                    disabled={this.state.selectedUser === null || this.state.reviewText.trim() === ''}
                 />
                 <Snackbar
                     open={this.state.shwMsg}
