@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import './UserForm.css';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 
+const newUserMsg = "New user added to table";
+const updUserMsg = "User updated";
 
 class UserForm extends React.Component {
     constructor(props) {
@@ -12,12 +13,13 @@ class UserForm extends React.Component {
         this.state = {
             firstName: '', 
             lastName: '',
-            shwMsg: false 
+            shwMsg: false,
+            message: ''
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);      
-        this.handleRequestClose = this.handleRequestClose.bind(this);  
+        this.handleRequestClose = this.handleRequestClose.bind(this);
     }
 
     handleSubmit(event) {
@@ -28,9 +30,11 @@ class UserForm extends React.Component {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             name:`${this.state.firstName} ${this.state.lastName}`,
-            id: this.state.id ? this.state.id : Math.ceil(Math.random()*100)
+            id: this.props.updateUser ? this.props.updateUser.id : Math.ceil(Math.random()*100),
+            isAdmin: this.props.updateUser ? true : false,
+            reviews: this.props.updateUser ? this.props.updateUser.reviews : []
         }
-        this.setState({shwMsg: true});
+        this.props.updateUser ? this.setState({shwMsg: true, message: updUserMsg}) : this.setState({shwMsg: true, message: newUserMsg});
         this.props.onUserFormChange(user);
         this.setState({firstName: '', lastName: ''});        
     }
@@ -49,9 +53,14 @@ class UserForm extends React.Component {
         this.setState({
             shwMsg: false,
         });
-    };
+    };    
 
-    render() {
+    componentWillReceiveProps(props){
+        if (props.updateUser) this.setState({firstName : props.updateUser.firstName, lastName: props.updateUser.lastName})
+        else this.setState({firstName : '', lastName: ''})
+    };    
+
+    render() {        
         const firstName = this.state.firstName;
         const lastName = this.state.lastName;
         
@@ -73,7 +82,7 @@ class UserForm extends React.Component {
             <RaisedButton primary={true} label="Add user" type="submit"/>
             <Snackbar
                 open={this.state.shwMsg}
-                message="New user added to table"
+                message={this.state.message}
                 autoHideDuration={2000}
                 onRequestClose={this.handleRequestClose}
             />

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './UsersTable.css';
 import {
     Table,
     TableBody,
@@ -14,7 +13,7 @@ import {
   import Snackbar from 'material-ui/Snackbar';
 
 const style = {    
-    clear: { 
+    deleteBtn: { 
         float: 'right',
         padding: 0,
         height: '24px'
@@ -29,8 +28,8 @@ function ReviewCell(props){
     return (
         <TableRow displayBorder={false}>
             <TableRowColumn>
-                <span>{props.reviewText}</span>    
-                <IconButton style={style.clear} onClick={() => props.onReviewDelete(props.review)}>
+                <span>{props.review.reviewText}</span>    
+                <IconButton style={style.deleteBtn} onClick={() => props.onReviewDelete(props.review)}>
                     <FontIcon className="material-icons">clear</FontIcon>               
                 </IconButton>
             </TableRowColumn>
@@ -40,17 +39,24 @@ function ReviewCell(props){
 
 function TableUserRow(props){
     const reviews = props.reviews;
-    const listOfReviews = reviews.length > 0 ? reviews.map((review) => <ReviewCell key={review.id} review={review} reviewText={review.reviewText} onReviewDelete={props.onReviewDelete}/>) : null;    
+    const listOfReviews = reviews.length > 0 ? reviews.map((review) => { 
+        if (review.userId == props.user.id) 
+        return <ReviewCell 
+                key={review.id} 
+                review={review} 
+                onReviewDelete={props.onReviewDelete}
+                />
+    }) : null;    
     return (
-        <TableRow>
+        <TableRow style={props.user.isAdmin ? {backgroundColor:'#69e06e'} : {}}>
             <TableRowColumn style={{fontSize:'18px'}}>
-                <span>{props.name}</span>
-                <IconButton style={style.clear} onClick={() => props.onUserDelete(props.user)}>
+                <span onClick={props.user.isAdmin ? () => props.onUserUpdate(props.user) : null}>{props.user.name}</span>
+                <IconButton style={style.deleteBtn} onClick={() => props.onUserDelete(props.user)}>
                     <FontIcon className="material-icons">clear</FontIcon>               
                 </IconButton> 
             </TableRowColumn>
             <TableRowColumn>
-                <Table>
+                <Table style={{backgroundColor: 'inherit'}}>
                     <TableBody>
                         {listOfReviews}
                     </TableBody>
@@ -66,7 +72,8 @@ class UsersTable extends Component{
         this.state = {shwMsg: false, message: ''};
         this.handleUserDelete = this.handleUserDelete.bind(this);
         this.handleReviewDelete = this.handleReviewDelete.bind(this)
-        this.handleRequestClose = this.handleRequestClose.bind(this);        
+        this.handleRequestClose = this.handleRequestClose.bind(this);
+        this.handleUserUpdate = this.handleUserUpdate.bind(this);                
     }
     handleUserDelete(user){
         this.props.onUserDelete(user);
@@ -77,30 +84,31 @@ class UsersTable extends Component{
         this.props.onReviewDelete(review);
         this.setState({shwMsg: true, message: reviewDeletedMsg});
     }
+
+    handleUserUpdate(user){
+        this.props.onUserUpdate(user);
+    }
     
     handleRequestClose() {
         this.setState({
             shwMsg: false,
         });
     }
+
     render(){
         const users = this.props.users;
-        this.props.reviews.forEach((review) =>
-            {
-                users.forEach((user) => {
-                    if (!user.reviews) user.reviews = [];
-                    if (user.id == review.userId && user.reviews.indexOf(review) == -1) user.reviews.push(review);
-                })
-            }
-        );
+        const reviews = this.props.reviews;
+        
         const listOfUsers = users.map((user) => 
             <TableUserRow 
-            key={user.id} 
-            user={user} 
-            name={user.name} 
-            reviews={user.reviews} 
-            onUserDelete={this.handleUserDelete} 
-            onReviewDelete={this.handleReviewDelete}/>);
+                key={user.id}
+                user={user}
+                reviews={reviews}
+                onUserDelete={this.handleUserDelete} 
+                onReviewDelete={this.handleReviewDelete}
+                onUserUpdate={this.handleUserUpdate}
+            />
+        );
         
         return (
             <Paper zDepth={1}>

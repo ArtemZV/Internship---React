@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './ReviewForm.css';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
@@ -54,7 +53,10 @@ class ReviewForm extends React.Component{
 
     render(){
         const users = this.props.users;
-        const selectItems = users.map((user) => <MenuItem key={user.id} value={user.id} primaryText={user.name} />); 
+        const selectItems = users.map((user) => {
+            if (!user.isAdmin) 
+            return <MenuItem key={user.id} value={user.id} primaryText={user.name}/>
+        }); 
         return (
             <form onSubmit={this.handleSubmit} autoComplete="off">
                 Review input:
