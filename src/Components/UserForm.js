@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import Snackbar from 'material-ui/Snackbar';
+import Notification from './Notification';
 
 const newUserMsg = "New user added to table";
 const updUserMsg = "User updated";
@@ -14,7 +12,8 @@ class UserForm extends React.Component {
             firstName: '', 
             lastName: '',
             shwMsg: false,
-            message: ''
+            message: '',
+            unvalid: true
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -22,10 +21,20 @@ class UserForm extends React.Component {
         this.handleRequestClose = this.handleRequestClose.bind(this);
     }
 
+    validationForm(){
+        if (this.state.firstName.trim() == '' 
+            || this.state.lastName.trim() == ''
+            || !this.state.firstName.match(/^[A-Za-zА-ЯЁа-яё\s]+$/) 
+            || !this.state.lastName.match(/^[A-Za-zА-ЯЁа-яё\s]+$/)){
+            this.setState({unvalid: true});
+        } 
+        else {
+            this.setState({unvalid: false});
+        }
+    }
+
     handleSubmit(event) {
         event.preventDefault();
-        if (!this.state.firstName.match(/^[A-Za-zА-ЯЁа-яё\s]+$/) 
-        || !this.state.lastName.match(/^[A-Za-zА-ЯЁа-яё\s]+$/) ) return;
         const user = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
@@ -47,6 +56,7 @@ class UserForm extends React.Component {
         this.setState({
             [name]: value
         });
+        this.validationForm();        
     }
 
     handleRequestClose() {
@@ -68,22 +78,23 @@ class UserForm extends React.Component {
         <form onSubmit={this.handleSubmit} autoComplete="off">
             User input:
             <div id="userForm">
-                <TextField 
-                 floatingLabelText="First name" 
+                <input 
+                 placeholder="First Name" 
                  value={firstName} 
                  name="firstName" 
                  onChange={this.handleInputChange}/><br/>                
-                <TextField 
-                 floatingLabelText="Last name" 
+                <input 
+                 placeholder="Last Name" 
                  value={lastName} 
                  name="lastName" 
                  onChange={this.handleInputChange}/>
             </div>
-            <RaisedButton primary={true} label="Add user" type="submit" disabled={firstName.trim() == '' || lastName.trim() == ''}/>
-            <Snackbar
+            <button type="submit" disabled={this.state.unvalid}>
+                Add user
+            </button>
+            <Notification
                 open={this.state.shwMsg}
                 message={this.state.message}
-                autoHideDuration={2000}
                 onRequestClose={this.handleRequestClose}
             />
         </form>   

@@ -90,7 +90,7 @@ class App extends Component {
         <div style={style.inlineBlock}>
           <UserForm name="Test" updateUser={this.state.updateUser} onUserFormChange={this.handleUserFormChange} />
         </div>
-        <div style={style.inlineBlock}>
+        {/* <div style={style.inlineBlock}>
           <ReviewForm users={this.state.users} onReviewCreate={this.handleReviewCreated} />
         </div>
         <div style={style.wideBlock}>                    
@@ -101,7 +101,7 @@ class App extends Component {
             onReviewDelete={this.handleDeleteReview}
             onUserUpdate={this.handleUserUpdate}
           />
-        </div>
+        </div> */}
       </div>
     );
   }
