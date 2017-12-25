@@ -1,21 +1,11 @@
 import React, { Component } from 'react';
-import {
-    Table,
-    TableBody,
-    TableHeader,
-    TableHeaderColumn,
-    TableRow,
-    TableRowColumn,
-  } from 'material-ui/Table';
-  import Paper from 'material-ui/Paper'
-  import IconButton from 'material-ui/IconButton';
-  import FontIcon from 'material-ui/FontIcon';
-  import Snackbar from 'material-ui/Snackbar';
 
 const style = {    
     deleteBtn: { 
         float: 'right',
-        height: '100%'
+        height: '100%',
+        display: 'inline-flex',
+        alignItems: 'center',
     },
     tableSpan:{
         display: 'inline-flex',
@@ -23,7 +13,9 @@ const style = {
         wordBreak: 'break-word',
         whiteSpace: 'normal',
         alignItems: 'center',
-        height: '100%'
+        height: '100%',
+        float: 'left',
+        marginLeft: '20px'
     }
 }
 
@@ -33,14 +25,12 @@ const reviewDeletedMsg = 'Review deleted from table';
 
 function ReviewCell(props){    
     return (
-        <TableRow displayBorder={false} style={!props.review.isAproved ? {backgroundColor: '#bbbbbb'} : {}}>
-            <TableRowColumn>
-                <span style={style.tableSpan}>{props.review.reviewText}</span>    
-                <IconButton style={style.deleteBtn} onClick={() => props.onReviewDelete(props.review)}>
-                    <FontIcon className="material-icons">clear</FontIcon>               
-                </IconButton>
-            </TableRowColumn>
-        </TableRow>
+        <tr style={!props.review.isAproved ? {backgroundColor: '#bbbbbb'} : {}}>
+            <td>
+                <span style={style.tableSpan}>{props.review.reviewText}</span>  
+                <i className="material-icons" style={style.deleteBtn} onClick={() => props.onReviewDelete(props.review)}>clear</i>
+            </td>
+        </tr>
     )
 }
 
@@ -55,23 +45,21 @@ function TableUserRow(props){
                 />
     }) : null;    
     return (
-        <TableRow style={props.user.isAdmin ? {backgroundColor:'#69e06e'} : {}}>
-            <TableRowColumn style={{fontSize:'18px'}}>
-                <span style={style.tableSpan}onClick={props.user.isAdmin ? () => props.onUserUpdate(props.user) : null}>{props.user.name}</span>
+        <tr style={props.user.isAdmin ? {backgroundColor:'#69e06e'} : {}}>
+            <td style={{fontSize:'18px'}}>
+                <span style={style.tableSpan}onClick={props.user.isAdmin ? () => props.onUserUpdate(props.user) : null}>{props.user.firstName} {props.user.lastName}</span>
                 {!props.user.isAdmin &&
-                    <IconButton style={style.deleteBtn} onClick={() => props.onUserDelete(props.user)}>
-                        <FontIcon className="material-icons">clear</FontIcon>               
-                    </IconButton>
+                    <i className="material-icons" style={style.deleteBtn} onClick={() => props.onUserDelete(props.user)}>clear</i>               
                 } 
-            </TableRowColumn>
-            <TableRowColumn>
-                <Table style={{backgroundColor: 'inherit'}}>
-                    <TableBody>
+            </td>
+            <td>
+                <table style={{backgroundColor: 'inherit'}}>
+                    <tbody>
                         {listOfReviews}
-                    </TableBody>
-                </Table>
-            </TableRowColumn>
-        </TableRow>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
     )
 }
 
@@ -80,8 +68,7 @@ class UsersTable extends Component{
         super(props);
         this.state = {shwMsg: false, message: ''};
         this.handleUserDelete = this.handleUserDelete.bind(this);
-        this.handleReviewDelete = this.handleReviewDelete.bind(this)
-        this.handleRequestClose = this.handleRequestClose.bind(this);
+        this.handleReviewDelete = this.handleReviewDelete.bind(this);
         this.handleUserUpdate = this.handleUserUpdate.bind(this);                
     }
     handleUserDelete(user){
@@ -97,16 +84,19 @@ class UsersTable extends Component{
     handleUserUpdate(user){
         this.props.onUserUpdate(user);
     }
-    
-    handleRequestClose() {
-        this.setState({
-            shwMsg: false,
-        });
-    }
 
     render(){
         const users = this.props.users;
         const reviews = this.props.reviews;
+      
+        reviews.forEach((review) =>
+                {
+                users.forEach((user) => {
+                        if (!user.reviews) user.reviews = [];
+                        if (user.id == review.userId && user.reviews.indexOf(review) == -1) user.reviews.push(review);
+                    })
+                }
+        );
         
         const listOfUsers = users.map((user) => 
             <TableUserRow 
@@ -120,25 +110,19 @@ class UsersTable extends Component{
         );
         
         return (
-            <Paper zDepth={1}>
-                <Table>
-                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                        <TableRow>
-                            <TableHeaderColumn>User</TableHeaderColumn>
-                            <TableHeaderColumn>Reviews</TableHeaderColumn>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody showRowHover={true}>
+            <div>
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Reviews</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         {listOfUsers}
-                    </TableBody>
-                </Table>
-                <Snackbar
-                    open={this.state.shwMsg}
-                    message={this.state.message}
-                    autoHideDuration={2000}
-                    onRequestClose={this.handleRequestClose}
-                />
-            </Paper>            
+                    </tbody>
+                </table>                
+            </div>            
         )        
     }
 }

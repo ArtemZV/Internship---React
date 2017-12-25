@@ -1,21 +1,14 @@
 import React from 'react';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import Snackbar from 'material-ui/Snackbar';
 
 
 class ReviewForm extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            selectedUser: null,
-            reviewText: '',
-            shwMsg: false
+            selectedUser: '',
+            reviewText: ''
         };        
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleRequestClose =this.handleRequestClose.bind(this);
         this.handleSelectChange = this.handleSelectChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         
@@ -29,19 +22,13 @@ class ReviewForm extends React.Component{
             userId: this.state.selectedUser,
             isAproved: false
         }    
-        this.setState({reviewText:'',shwMsg: true, selectedUser: null})
+        this.setState({reviewText:'', selectedUser: ''})
         this.props.onReviewCreate(review);  
     }
 
-    handleRequestClose() {
+    handleSelectChange(event) {
         this.setState({
-            shwMsg: false,
-        });
-    };
-
-    handleSelectChange(event, index, value) {
-        this.setState({
-            selectedUser: value
+            selectedUser: event.target.value
         });
     }
 
@@ -55,45 +42,33 @@ class ReviewForm extends React.Component{
         const users = this.props.users;
         const selectItems = users.map((user) => {
             if (!user.isAdmin) 
-            return <MenuItem key={user.id} value={user.id} primaryText={user.name}/>
+            return <option key={user.id} value={user.id}>{user.firstName} {user.lastName}</option>
         }); 
         
         return (
-            <form onSubmit={this.handleSubmit} autoComplete="off">
+            <form onSubmit={this.handleSubmit} autoComplete="off" id="reviewForm">
                 Review input:
-                <div id="reviewForm">
-                    <SelectField
-                        floatingLabelText="Select user"
+                <div>
+                    <select
                         value={this.state.selectedUser}
                         onChange={this.handleSelectChange}
-                        style={{textAlign: 'left'}}
                     >
-                        <MenuItem value={null} primaryText="" />
+                        <option value={''} children="Select user" />
                         {selectItems}
-                    </SelectField>
+                    </select>
                     <br />
-                    <TextField 
-                        floatingLabelText="Review text" 
-                        name="lastName" 
-                        onChange={this.handleInputChange} 
-                        multiLine={true}
-                        rowsMax={4}
+                    <textarea
+                        placeholder="Review text"
+                        onChange={this.handleInputChange}
                         value={this.state.reviewText}
-                        style={{textAlign: 'left'}}
                     />
                 </div>
-                <RaisedButton 
-                    primary={true} 
-                    label="Add review" 
+                <button
+                    children="Add review"
                     type="submit"
+                    className="simpleButton"
                     disabled={this.state.selectedUser === null || this.state.reviewText.trim() === ''}
-                />
-                <Snackbar
-                    open={this.state.shwMsg}
-                    message="New review added to table"
-                    autoHideDuration={2000}
-                    onRequestClose={this.handleRequestClose}
-                />
+                />                
             </form> 
         );
     }
