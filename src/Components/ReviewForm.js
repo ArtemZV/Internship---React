@@ -49,25 +49,28 @@ class ReviewForm extends React.Component{
             <form onSubmit={this.handleSubmit} autoComplete="off" id="reviewForm">
                 Review input:
                 <div>
-                    <select
-                        value={this.state.selectedUser}
-                        onChange={this.handleSelectChange}
-                    >
-                        <option value={''} children="Select user" />
-                        {selectItems}
-                    </select>
-                    <br />
-                    <textarea
-                        placeholder="Review text"
-                        onChange={this.handleInputChange}
-                        value={this.state.reviewText}
-                    />
+                    <div>
+                        <select
+                            value={this.state.selectedUser}
+                            onChange={this.handleSelectChange}
+                        >
+                            <option value={''} children="Select user" />
+                            {selectItems}
+                        </select>                        
+                    </div>
+                    <div>
+                        <textarea
+                            placeholder="Review text"
+                            onChange={this.handleInputChange}
+                            value={this.state.reviewText}
+                        />
+                    </div>
                 </div>
                 <button
                     children="Add review"
                     type="submit"
                     className="simpleButton"
-                    disabled={this.state.selectedUser === null || this.state.reviewText.trim() === ''}
+                    disabled={this.state.selectedUser === '' || this.state.reviewText.trim() === ''}
                 />                
             </form> 
         );

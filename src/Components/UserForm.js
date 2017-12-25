@@ -8,15 +8,15 @@ class UserForm extends React.Component {
         firstName: '', 
         lastName: '',
         errors: {},
-        unvalid: true
+        invalid: true
     }
 
     validateForm = () => {
         if (this.state.firstName.trim() != '' && this.state.lastName.trim() != ''){
-            this.setState({unvalid: false});
+            this.setState({invalid: false});
         } 
         else {
-            this.setState({unvalid: true});
+            this.setState({invalid: true});
         }
     }
 
@@ -31,7 +31,7 @@ class UserForm extends React.Component {
             reviews: this.props.updateUser ? this.props.updateUser.reviews : []
         }
         this.props.onUserFormChange(user);
-        this.setState({firstName: '', lastName: '', errors: {}, unvalid: true});        
+        this.setState({firstName: '', lastName: '', errors: {}, invalid: true});        
     }
 
     handleInputChange = (event) => {
@@ -62,36 +62,40 @@ class UserForm extends React.Component {
     }
 
     componentWillReceiveProps(props){
-        if (props.updateUser) this.setState({firstName : props.updateUser.firstName, lastName: props.updateUser.lastName})
+        if (props.updateUser) this.setState({firstName : props.updateUser.firstName, lastName: props.updateUser.lastName, invalid: false, errors: {}})
         else this.setState({firstName : '', lastName: ''})
     };    
 
     render() {
-        const {firstName, lastName, errors, unvalid} = this.state
+        const {firstName, lastName, errors, invalid} = this.state
         
       return (
         <form onSubmit={this.handleSubmit} autoComplete="off" id="userForm">
             User input:
             <div>
-                <input 
-                    placeholder="First Name" 
-                    value={firstName} 
-                    name="firstName" 
-                    onChange={this.handleInputChange}
-                    onBlur={this.handleBlur}
-                />
-                {errors.firstName && errors.firstName.message}
-                <input 
-                    placeholder="Last Name"
-                    value={lastName}
-                    name="lastName"
-                    onChange={this.handleInputChange}
-                    onBlur={this.handleBlur}
-                />
-                {errors.lastName && errors.lastName.message}
+                <div className={this.state.errors.firstName && 'invalid'}>
+                    <input 
+                        placeholder="First Name" 
+                        value={firstName} 
+                        name="firstName" 
+                        onChange={this.handleInputChange}
+                        onBlur={this.handleBlur}
+                    />
+                    {errors.firstName && errors.firstName.message}
+                </div>
+                <div className={this.state.errors.lastName && 'invalid'}>
+                    <input 
+                        placeholder="Last Name"
+                        value={lastName}
+                        name="lastName"
+                        onChange={this.handleInputChange}
+                        onBlur={this.handleBlur}
+                    />
+                    {errors.lastName && errors.lastName.message}
+                </div>                
             </div>
-            <button className="simpleButton" type="submit" disabled={unvalid}>
-                Add user
+            <button className="simpleButton" type="submit" disabled={invalid}>
+                {this.props.updateUser ?'Update user' : 'Add user'}     
             </button>
         </form>
       );             

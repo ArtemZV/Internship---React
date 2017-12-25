@@ -19,10 +19,6 @@ const style = {
     }
 }
 
-const userDeletedMsg = 'User deleted form table';
-const reviewDeletedMsg = 'Review deleted from table';
-
-
 function ReviewCell(props){    
     return (
         <tr style={!props.review.isAproved ? {backgroundColor: '#bbbbbb'} : {}}>
@@ -66,19 +62,16 @@ function TableUserRow(props){
 class UsersTable extends Component{
     constructor(props) {
         super(props);
-        this.state = {shwMsg: false, message: ''};
         this.handleUserDelete = this.handleUserDelete.bind(this);
         this.handleReviewDelete = this.handleReviewDelete.bind(this);
         this.handleUserUpdate = this.handleUserUpdate.bind(this);                
     }
     handleUserDelete(user){
         this.props.onUserDelete(user);
-        this.setState({shwMsg: true, message: userDeletedMsg});
     }
 
     handleReviewDelete(review){
         this.props.onReviewDelete(review);
-        this.setState({shwMsg: true, message: reviewDeletedMsg});
     }
 
     handleUserUpdate(user){
