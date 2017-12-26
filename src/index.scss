@@ -48,7 +48,7 @@ body {
 
   .popup{
       box-sizing: border-box;
-      color: mintcream; 
+      color: mintcream;
       height: 40px;
       margin-bottom: 10px;
       position: relative;
@@ -74,7 +74,7 @@ body {
 }
 
 .wideBlock {
-    width: 80%; 
+    width: 80%;
     margin-top: 15px;
     margin-left: auto;
     margin-right: auto;
@@ -104,7 +104,7 @@ body {
       background: #fb7f7f;
       color: rgb(68, 63, 63);
   }
-  
+
 
   thead {
       font-size: 20px;
@@ -116,9 +116,9 @@ body {
   }
 
   thead th:first-child, > tbody > tr > td:first-child{
-      height: 32px;     
-      border-right: 1px solid #e1e1e1;   
-  }    
+      height: 32px;
+      border-right: 1px solid #e1e1e1;
+  }
 
   td {
       width: 50%;
@@ -145,12 +145,12 @@ body {
 
       td{
           width: 100%;
-          padding: 6px;    
-          min-height: 32px;            
+          padding: 6px;
+          min-height: 32px;
           max-width: 600px;
           height: 32px;
       }
-      
+
       td.isNotAproved{
           background-color: #eee
       }
@@ -160,16 +160,34 @@ body {
       }
 
       tr{
-          border-top: 1px solid #e1e1e1;            
+          border-top: 1px solid #e1e1e1;
       }
-  }  
+  }
+
+  .deleteBtn{
+    float: right;
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .tableSpan{
+    display: inline-flex;
+    max-width: 350px;
+    word-break: break-word;
+    white-space: normal;
+    align-items: center;
+    height: 100%;
+    float: left;
+    margin-left: 20px;
+  }
 }
 
 #userForm{
     height: 160px;
 
     > div > div{
-        margin-bottom: 10px;  
+        margin-bottom: 10px;
         height: 48px;
     }
 
@@ -188,13 +206,13 @@ body {
         display: block;
         border: none;
         border-bottom: 2px solid #6b6767;
-    } 
-} 
+    }
+}
 
 #reviewForm{
     > div > div{
-        margin-bottom: 10px;  
-        height: 48px;            
+        margin-bottom: 10px;
+        height: 48px;
     }
 
     textarea{
@@ -205,13 +223,24 @@ body {
         height: 36px;
     }
 
-    select, textarea{    
+    select, textarea{
         width: 180px;
         border: none;
         background-color: white;
         border-bottom: 2px solid #6b6767;
         color:#6b6767;
         font-family: Arial;
+        display: block;
+        margin: 0 auto;
+
+    }
+
+    .invalid{
+        color: red;
+
+        select, textarea{
+            border-bottom: 2px solid red;
+        }
     }
 }
 

@@ -9,11 +9,11 @@ import './App.css';
 const usersArr = [
     {firstName: "Test", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: false},
     {firstName: "Test", lastName: "User 2", id: Math.ceil(Math.random()*100), isAdmin: false},
-    {firstName: "Default", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: true}    
+    {firstName: "Default", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: true}
 ]
 
 const reviewsArr = [
-  {reviewText:'test review 1', id: Math.ceil(Math.random()*100), userId:usersArr[0].id, isAproved: true}, 
+  {reviewText:'test review 1', id: Math.ceil(Math.random()*100), userId:usersArr[0].id, isAproved: true},
   {reviewText: 'test review 2', id: Math.ceil(Math.random()*100), userId:usersArr[0].id, isAproved: true},
   {reviewText:'test review 3', id: Math.ceil(Math.random()*100), userId:usersArr[1].id, isAproved: true},
   {reviewText: 'test review 4', id: Math.ceil(Math.random()*100), userId:usersArr[1].id, isAproved: true},
@@ -75,18 +75,18 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">        
+      <div className="App">
         <div className='inlineBlock'>
           <UserForm updateUser={this.state.updateUser} onUserFormChange={this.handleUserFormChange} />
         </div>
         <div className='inlineBlock'>
           <ReviewForm users={this.state.users} onReviewCreate={this.handleReviewCreated} />
         </div>
-        <div className='wideBlock'>                    
-          <UsersTable 
-            users={this.state.users} 
-            reviews={this.state.reviews} 
-            onUserDelete={this.handleDeleteUser} 
+        <div className='wideBlock'>
+          <UsersTable
+            users={this.state.users}
+            reviews={this.state.reviews}
+            onUserDelete={this.handleDeleteUser}
             onReviewDelete={this.handleDeleteReview}
             onUserUpdate={this.handleUserUpdate}
           />
