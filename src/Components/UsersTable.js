@@ -54,7 +54,7 @@ class UsersTable extends Component{
         this.props.onUserUpdate(user);
     }
 
-    componentWillReceiveProps(props){
+    render(){
         const {users, reviews} = this.props;
 
         reviews.forEach((review) =>
@@ -65,10 +65,6 @@ class UsersTable extends Component{
                     })
                 }
         );
-    }
-
-    render(){
-        const {users, reviews} = this.props;
 
         const listOfUsers = users.map((user) =>
             <TableUserRow

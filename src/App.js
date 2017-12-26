@@ -39,7 +39,7 @@ class App extends Component {
     }
     else  {
       this.setState({users: users.concat(user)});
-      popups.push("New user create");
+      popups.push({message: "New user create", id: Math.ceil(Math.random()*100)});
     }
     this.setState({popups: popups});
   }
@@ -49,7 +49,8 @@ class App extends Component {
     this.setState({reviews: reviews.concat(review)});
 
     const popups = this.state.popups;
-    this.setState({popups: popups.push("New review create")});
+    popups.push({message: "New review create", id: Math.ceil(Math.random()*100)});
+    this.setState({popups: popups});
   }
 
   handleDeleteUser = (user) => {
@@ -63,7 +64,8 @@ class App extends Component {
     this.setState({users: users, reviews: reviews, updateUser: updUser});
 
     const popups = this.state.popups;
-    this.setState({popups: popups.push("User deleted")});
+    popups.push({message: "User deleted", id: Math.ceil(Math.random()*100)})
+    this.setState({popups: popups});
   }
 
   handleDeleteReview = (review) => {
@@ -71,14 +73,20 @@ class App extends Component {
           index = reviews.indexOf(review),
           popups = this.state.popups;
     reviews.splice(index, 1);
+    popups.push({message: "Review deleted", id: Math.ceil(Math.random()*100)});
     this.setState({
       reviews: reviews,
-      popups:popups.push("Review deleted")
+      popups: popups
     });
   }
 
-  handleUserUpdate = (user) => {
-    this.setState({updateUser: user});
+  handlePopupClose = (id) => {
+    const popups = this.state.popups,
+          index = popups.find((popup, index) => {
+            if (popup.id === id) return index;
+          });
+    popups.splice(index, 1);
+    this.setState({popups: popups});
   }
 
   render() {
@@ -96,10 +104,9 @@ class App extends Component {
             reviews={this.state.reviews}
             onUserDelete={this.handleDeleteUser}
             onReviewDelete={this.handleDeleteReview}
-            onUserUpdate={this.handleUserUpdate}
           />
         </div>
-        <PopupsBlock popups={this.state.popups}/>
+        <PopupsBlock popups={this.state.popups} onPopupClose={this.handlePopupClose}/>
       </div>
     );
   }
