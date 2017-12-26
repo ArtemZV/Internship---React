@@ -7,7 +7,7 @@ import PopupsBlock from './Components/PopupsBlock'
 const usersArr = [
   {firstName: "Test", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: false},
   {firstName: "Test", lastName: "User 2", id: Math.ceil(Math.random()*100), isAdmin: false},
-  {firstName: "Default", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: true}
+  {firstName: "Admin", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: true}
 ]
 
 const reviewsArr = [
@@ -48,19 +48,17 @@ class App extends Component {
     const {reviews, popups} = this.state;
     reviews.push(review);
     popups.push({message: "New review create", id: Math.ceil(Math.random()*100)});
-
     this.setState({review, popups});
   }
 
   handleDeleteUser = (user) => {
-    let {reviews, users, popups, editingUser} = this.state;
-    editingUser = (editingUser && editingUser.id === user.id) ? null : editingUser;
+    let {reviews, users, popups} = this.state;
 
     user.reviews.forEach((review) => {reviews.splice(reviews.indexOf(review), 1)});
     users = users.filter((usr) => usr.id !== user.id);
     popups.push({message: "User deleted", id: Math.ceil(Math.random()*100)});
 
-    this.setState({popups, users, reviews, editingUser});
+    this.setState({popups, users, reviews});
   }
 
   handleDeleteReview = (review) => {
