@@ -1,7 +1,4 @@
-import React, { Component } from 'react';
-
-const newUserMsg = "New user added to table";
-const updUserMsg = "User updated";
+import React from 'react';
 
 class UserForm extends React.Component {
     state = {
@@ -36,7 +33,7 @@ class UserForm extends React.Component {
             this.setState({
                 errors: {
                     [event.target.name]: {
-                        message: `Please fill this field`
+                        message: "Please fill this field"
                     },
                     ...this.state.errors
                 }
@@ -52,7 +49,7 @@ class UserForm extends React.Component {
     }
 
     validateForm = () => {
-        this.state.firstName.trim() != '' && this.state.lastName.trim() != '' ?
+        this.state.firstName.trim() !== '' && this.state.lastName.trim() !== '' ?
             this.setState({disabled: false}) : this.setState({disabled: true});
     }
 
@@ -68,7 +65,7 @@ class UserForm extends React.Component {
         <form onSubmit={this.handleSubmit} autoComplete="off" id="userForm">
             User input:
             <div>
-                <div className={errors.firstName && 'invalid'}>
+                <div className={errors.firstName ? "invalid" : ""}>
                     <input
                         placeholder="First Name"
                         value={firstName}
@@ -78,7 +75,7 @@ class UserForm extends React.Component {
                     />
                     {errors.firstName && errors.firstName.message}
                 </div>
-                <div className={errors.lastName && 'invalid'}>
+                <div className={errors.lastName ? "invalid" : ""}>
                     <input
                         placeholder="Last Name"
                         value={lastName}
@@ -90,7 +87,7 @@ class UserForm extends React.Component {
                 </div>
             </div>
             <button className="simpleButton" type="submit" disabled={disabled}>
-                {this.props.updateUser ?'Update user' : 'Add user'}
+                {this.props.updateUser ?"Update user" : "Add user"}
             </button>
         </form>
       );

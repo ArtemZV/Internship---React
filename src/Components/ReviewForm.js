@@ -14,7 +14,7 @@ class ReviewForm extends React.Component{
         const review = {
             id: Math.ceil(Math.random()*100),
             reviewText: this.state.reviewText,
-            userId: this.state.selectedUser,
+            userId: +this.state.selectedUser,
             isAproved: false
         }
         this.setState({reviewText:'', selectedUser: '', disabled: true})
@@ -56,15 +56,16 @@ class ReviewForm extends React.Component{
         const {selectedUser, reviewText, errors, disabled} = this.state
         const users = this.props.users;
         const selectItems = users.map((user) => {
-            if (!user.isAdmin)
-            return <option key={user.id} value={user.id}>{user.firstName} {user.lastName}</option>
+            if (!user.isAdmin) {
+                return <option key={user.id} value={user.id}>{user.firstName} {user.lastName}</option>
+            }
         });
 
         return (
             <form onSubmit={this.handleSubmit} autoComplete="off" id="reviewForm">
                 Review input:
                 <div>
-                    <div className={errors.selectedUser && 'invalid'}>
+                    <div className={errors.selectedUser ? "invalid" : ""}>
                         <select
                             value={selectedUser}
                             onChange={this.handleChange}
@@ -76,7 +77,7 @@ class ReviewForm extends React.Component{
                         </select>
                         {errors.selectedUser && errors.selectedUser.message}
                     </div>
-                    <div className={errors.reviewText && 'invalid'}>
+                    <div className={errors.reviewText ? "invalid" : ""}>
                         <textarea
                             value={reviewText}
                             onChange={this.handleChange}

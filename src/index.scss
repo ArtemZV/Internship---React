@@ -100,8 +100,8 @@ body {
       color: rgb(117, 117, 117);
   }
 
-  tr.isConst td{
-      background: #fb7f7f;
+  tr.isAdmin td{
+      background: #69e06e;
       color: rgb(68, 63, 63);
   }
 
@@ -142,6 +142,7 @@ body {
   table{
       width: 100%;
       border-collapse: collapse;
+      background-color: inherit;
 
       td{
           width: 100%;
@@ -152,7 +153,8 @@ body {
       }
 
       td.isNotAproved{
-          background-color: #eee
+          background-color: #bbbbbb;
+          color: #454545;
       }
 
       tr:first-child{
@@ -180,6 +182,7 @@ body {
     height: 100%;
     float: left;
     margin-left: 20px;
+    font-size: 18px;
   }
 }
 

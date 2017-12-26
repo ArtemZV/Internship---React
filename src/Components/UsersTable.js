@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 
 function ReviewCell(props){
     return (
-        <tr style={!props.review.isAproved ? {backgroundColor: '#bbbbbb'} : {}}>
-            <td>
+        <tr>
+            <td className={!props.review.isAproved ? "isNotAproved" : ""}>
                 <span className="tableSpan">{props.review.reviewText}</span>
                 <i className="material-icons deleteBtn" onClick={() => props.onReviewDelete(props.review)}>clear</i>
             </td>
@@ -14,23 +14,24 @@ function ReviewCell(props){
 function TableUserRow(props){
     const reviews = props.reviews;
     const listOfReviews = reviews.length > 0 ? reviews.map((review) => {
-        if (review.userId == props.user.id)
-        return <ReviewCell
-                key={review.id}
-                review={review}
-                onReviewDelete={props.onReviewDelete}
-                />
+        if (review.userId === props.user.id){
+            return <ReviewCell
+                        key={review.id}
+                        review={review}
+                        onReviewDelete={props.onReviewDelete}
+                    />
+        }
     }) : null;
     return (
-        <tr style={props.user.isAdmin ? {backgroundColor:'#69e06e'} : {}}>
-            <td style={{fontSize:'18px'}}>
+        <tr className={props.user.isAdmin ? "isAdmin" : ""}>
+            <td>
                 <span className="tableSpan" onClick={props.user.isAdmin ? () => props.onUserUpdate(props.user) : null}>{props.user.firstName} {props.user.lastName}</span>
                 {!props.user.isAdmin &&
                     <i className="material-icons deleteBtn" onClick={() => props.onUserDelete(props.user)}>clear</i>
                 }
             </td>
             <td>
-                <table style={{backgroundColor: 'inherit'}}>
+                <table>
                     <tbody>
                         {listOfReviews}
                     </tbody>
@@ -53,18 +54,21 @@ class UsersTable extends Component{
         this.props.onUserUpdate(user);
     }
 
-    render(){
-        const users = this.props.users;
-        const reviews = this.props.reviews;
+    componentWillReceiveProps(props){
+        const {users, reviews} = this.props;
 
         reviews.forEach((review) =>
                 {
-                users.forEach((user) => {
+                    users.forEach((user) => {
                         if (!user.reviews) user.reviews = [];
-                        if (user.id == review.userId && user.reviews.indexOf(review) == -1) user.reviews.push(review);
+                        if (user.id === review.userId && user.reviews.indexOf(review) === -1) user.reviews.push(review);
                     })
                 }
         );
+    }
+
+    render(){
+        const {users, reviews} = this.props;
 
         const listOfUsers = users.map((user) =>
             <TableUserRow
