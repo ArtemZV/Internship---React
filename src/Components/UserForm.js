@@ -29,33 +29,42 @@ class UserForm extends React.Component {
     }
 
     handleBlur = (event) => {
+        const errors = this.state.errors;
         if (event.target.value.trim() === '') {
             this.setState({
                 errors: {
                     [event.target.name]: {
                         message: "Please fill this field"
                     },
-                    ...this.state.errors
+                    ...errors
                 }
             })
         }
         else {
-            delete this.state.errors[event.target.name];
+            delete errors[event.target.name];
             this.setState({
-                errors: this.state.errors
+                errors: errors
             })
         }
         this.validateForm();
     }
 
     validateForm = () => {
-        this.state.firstName.trim() !== '' && this.state.lastName.trim() !== '' ?
-            this.setState({disabled: false}) : this.setState({disabled: true});
+        if (this.state.firstName.trim() !== '' && this.state.lastName.trim() !== '') {
+            this.setState({disabled: false})
+        }
+        else {
+            this.setState({disabled: true});
+        }
     }
 
     componentWillReceiveProps(props){
-        if (props.updateUser) this.setState({firstName : props.updateUser.firstName, lastName: props.updateUser.lastName, disabled: false, errors: {}})
-        else this.setState({firstName : '', lastName: ''})
+        if (props.updateUser) {
+            this.setState({firstName : props.updateUser.firstName, lastName: props.updateUser.lastName, disabled: false, errors: {}})
+        }
+        else {
+            this.setState({firstName : '', lastName: ''})
+        }
     };
 
     render() {
@@ -87,7 +96,7 @@ class UserForm extends React.Component {
                 </div>
             </div>
             <button className="simpleButton" type="submit" disabled={disabled}>
-                {this.props.updateUser ?"Update user" : "Add user"}
+                {this.props.updateUser ? "Update user" : "Add user"}
             </button>
         </form>
       );

@@ -17,7 +17,7 @@ class ReviewForm extends React.Component{
             userId: +this.state.selectedUser,
             isAproved: false
         }
-        this.setState({reviewText:'', selectedUser: '', disabled: true})
+        this.setState({reviewText: '', selectedUser: '', disabled: true})
         this.props.onReviewCreate(review);
     }
 
@@ -28,28 +28,33 @@ class ReviewForm extends React.Component{
     }
 
     handleBlur = (event) => {
+        const errors = this.state.errors;
         if (event.target.value.trim() === '') {
             this.setState({
                 errors: {
                     [event.target.name]: {
                         message: `${event.target.name} is required`
                     },
-                    ...this.state.errors
+                    ...errors
                 }
             })
         }
         else {
-            delete this.state.errors[event.target.name];
+            delete errors[event.target.name];
             this.setState({
-                errors: this.state.errors
+                errors: errors
             })
         }
         this.validateForm();
     }
 
     validateForm = () => {
-        this.state.selectedUser !== '' && this.state.reviewText.trim() !== '' ?
-            this.setState({disabled: false}) : this.setState({disabled: true});
+        if (this.state.selectedUser !== '' && this.state.reviewText.trim() !== ''){
+            this.setState({disabled: false});
+        }
+        else {
+            this.setState({disabled: true});
+        }
     }
 
     render(){

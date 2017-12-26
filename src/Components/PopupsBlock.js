@@ -1,7 +1,6 @@
 import React from 'react';
 
-
-class Notification extends React.Component {
+class Popup extends React.Component {
     state = {
         show : true,
         destroy: false
@@ -22,4 +21,16 @@ class Notification extends React.Component {
         );
     }
 }
-export default Notification;
+
+class PopupsBlock extends React.Component {
+    render() {
+        const listOfPopups = this.props.popups.map((msg) => <Popup key={Math.random()} message={msg}/>)
+
+        return (
+            <div id="popupsBlock">
+                {listOfPopups}
+            </div>
+        );
+    }
+}
+export default PopupsBlock;

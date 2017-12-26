@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import UserForm from './Components/UserForm';
 import UsersTable from './Components/UsersTable';
 import ReviewForm from './Components/ReviewForm';
-import Popup from './Components/Popup'
+import PopupsBlock from './Components/PopupsBlock'
 
 import './App.css';
 
@@ -21,52 +21,60 @@ const reviewsArr = [
 ]
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      users: usersArr,
-      reviews: reviewsArr,
-      updateUser: null,
-      popups: []
-    };
-  }
+  state = {
+    users: usersArr,
+    reviews: reviewsArr,
+    updateUser: null,
+    popups: []
+  };
 
   handleUserFormChange = (user) => {
+    const popups = this.state.popups,
+          users = this.state.users;
     if (this.state.updateUser){
-      const index = this.state.users.indexOf(this.state.updateUser);
-      this.state.users.splice(index, 1, user);
-      this.setState({updateUser: null, users: this.state.users});
-      this.state.popups.push(<Popup key={Math.random()} message="User updated"/>);
+      const index = users.indexOf(this.state.updateUser);
+      users.splice(index, 1, user);
+      this.setState({updateUser: null, users: users});
+      popups.push("User updated");
     }
     else  {
-      this.setState({users: this.state.users.concat(user)});
-      this.state.popups.push(<Popup key={Math.random()} message="New user create"/>);
+      this.setState({users: users.concat(user)});
+      popups.push("New user create");
     }
-    this.setState({popups:this.state.popups});
+    this.setState({popups: popups});
   }
 
   handleReviewCreated = (review) => {
-    this.setState({reviews: this.state.reviews.concat(review)});
-    this.state.popups.push(<Popup key={Math.random()} message="New review create"/>);
-    this.setState({popups:this.state.popups});
+    const reviews = this.state.reviews;
+    this.setState({reviews: reviews.concat(review)});
+
+    const popups = this.state.popups;
+    this.setState({popups: popups.push("New review create")});
   }
 
   handleDeleteUser = (user) => {
-    user.reviews.forEach((review) => {this.state.reviews.splice(this.state.reviews.indexOf(review), 1)});
-    this.state.users.splice(this.state.users.indexOf(user), 1);
+    const reviews = this.state.reviews;
+    user.reviews.forEach((review) => {reviews.splice(reviews.indexOf(review), 1)});
+
+    const users = this.state.users;
+    users.splice(users.indexOf(user), 1);
+
     const updUser = (this.state.updateUser && this.state.updateUser.id === user.id) ? null : this.state.updateUser;
-    this.setState({users: this.state.users, reviews: this.state.reviews, updateUser: updUser});
-    this.state.popups.push(<Popup key={Math.random()} message="User deleted"/>);
-    this.setState({popups:this.state.popups});
+    this.setState({users: users, reviews: reviews, updateUser: updUser});
+
+    const popups = this.state.popups;
+    this.setState({popups: popups.push("User deleted")});
   }
 
   handleDeleteReview = (review) => {
-    const index = this.state.reviews.indexOf(review);
-    this.state.reviews.splice(index, 1);
-    this.setState({reviews: this.state.reviews});
-    this.state.popups.push(<Popup key={Math.random()} message="Review deleted"/>);
-    this.setState({popups:this.state.popups});
+    const reviews = this.state.reviews,
+          index = reviews.indexOf(review),
+          popups = this.state.popups;
+    reviews.splice(index, 1);
+    this.setState({
+      reviews: reviews,
+      popups:popups.push("Review deleted")
+    });
   }
 
   handleUserUpdate = (user) => {
@@ -91,9 +99,7 @@ class App extends Component {
             onUserUpdate={this.handleUserUpdate}
           />
         </div>
-        <div id="popupsBlock">
-          {this.state.popups}
-        </div>
+        <PopupsBlock popups={this.state.popups}/>
       </div>
     );
   }
