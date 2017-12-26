@@ -11,9 +11,9 @@ const usersArr = [
 ]
 
 const reviewsArr = [
-  {reviewText:'test review 1', id: Math.ceil(Math.random()*100), userId:usersArr[0].id, isAproved: true},
+  {reviewText: 'test review 1', id: Math.ceil(Math.random()*100), userId:usersArr[0].id, isAproved: true},
   {reviewText: 'test review 2', id: Math.ceil(Math.random()*100), userId:usersArr[0].id, isAproved: true},
-  {reviewText:'test review 3', id: Math.ceil(Math.random()*100), userId:usersArr[1].id, isAproved: true},
+  {reviewText: 'test review 3', id: Math.ceil(Math.random()*100), userId:usersArr[1].id, isAproved: true},
   {reviewText: 'test review 4', id: Math.ceil(Math.random()*100), userId:usersArr[1].id, isAproved: true},
   {reviewText: 'default review', id: Math.ceil(Math.random()*100), userId:usersArr[2].id, isAproved: true}
 ]
@@ -22,22 +22,26 @@ class App extends Component {
   state = {
     users: usersArr,
     reviews: reviewsArr,
-    updateUser: null,
+    editingUser: null,
     popups: []
   };
 
-  handleUserFormChange = (user) => {
-    const {popups, users, updateUser} = this.state;
-    if (updateUser){
-      const index = users.findIndex(user => user.id === updateUser.id);
-      users.splice(index, 1, user);
+  handleUserFormSubmit = (user) => {
+    let {popups, users, editingUser} = this.state;
+    if (editingUser){
+      users = users.map((usr) => {
+        if (usr.id === user.id){
+          return user;
+        }
+        return usr;
+      });
       popups.push({message: "User updated", id: Math.ceil(Math.random()*100)});
     }
     else {
       users.push(user)
       popups.push({message: "New user create", id: Math.ceil(Math.random()*100)});
     }
-    this.setState({updateUser: null, popups, users});
+    this.setState({editingUser: null, popups, users});
   }
 
   handleReviewCreated = (review) => {
@@ -49,43 +53,39 @@ class App extends Component {
   }
 
   handleDeleteUser = (user) => {
-    const {reviews, users, popups} = this.state,
-          updateUser = (this.state.updateUser && this.state.updateUser.id === user.id) ? null : this.state.updateUser;
+    let {reviews, users, popups, editingUser} = this.state;
+    editingUser = (editingUser && editingUser.id === user.id) ? null : editingUser;
 
     user.reviews.forEach((review) => {reviews.splice(reviews.indexOf(review), 1)});
-    const index = users.findIndex(u => user.id === u.id);
-    users.splice(index, 1);
+    users = users.filter((usr) => usr.id !== user.id);
     popups.push({message: "User deleted", id: Math.ceil(Math.random()*100)});
 
-    this.setState({popups, users, reviews, updateUser});
+    this.setState({popups, users, reviews, editingUser});
   }
 
   handleDeleteReview = (review) => {
-    const {reviews, popups} = this.state,
-          index = reviews.findIndex(rev => review.id === rev.id);
-
-    reviews.splice(index, 1);
+    let {reviews, popups} = this.state;
+    reviews = reviews.filter((rev) => rev.id !== review.id);
     popups.push({message: "Review deleted", id: Math.ceil(Math.random()*100)});
     this.setState({reviews, popups});
   }
 
   handlePopupClose = (id) => {
-    const popups = this.state.popups,
-          index = popups.findIndex(popup => popup.id === id);
-    popups.splice(index, 1);
+    let {popups} = this.state;
+    popups = popups.filter((popup) => popup.id !== id);
     this.setState({popups});
   }
 
-  handleUserEdit = (updateUser) => {
-    this.setState({updateUser});
+  handleUserEdit = (editingUser) => {
+    this.setState({editingUser});
   }
 
   render() {
-    const {updateUser, users, reviews, popups} = this.state;
+    const {editingUser, users, reviews, popups} = this.state;
     return (
       <div className="App">
         <div className="inlineBlock">
-          <UserForm updateUser={updateUser} onUserFormChange={this.handleUserFormChange} />
+          <UserForm editingUser={editingUser} onUserFormSubmit={this.handleUserFormSubmit} />
         </div>
         <div className="inlineBlock">
           <ReviewForm users={users} onReviewCreate={this.handleReviewCreated} />

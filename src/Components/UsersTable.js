@@ -1,34 +1,34 @@
 import React, { Component } from 'react';
 
 function ReviewCell(props){
-    const {review} = props;
+    const {review, onReviewDelete} = props;
     return (
         <tr>
             <td className={!review.isAproved ? "isNotAproved" : ""}>
                 <span className="tableSpan">{review.reviewText}</span>
-                <i className="material-icons deleteBtn" onClick={() => props.onReviewDelete(review)}>clear</i>
+                <i className="material-icons deleteBtn" onClick={() => onReviewDelete(review)}>clear</i>
             </td>
         </tr>
     )
 }
 
 function TableUserRow(props){
-    const {reviews, user} = props;
-    const listOfReviews = reviews.length > 0 ? reviews.map((review) => {
+    const {reviews, user, onUserEdit, onUserDelete, onReviewDelete} = props;
+    const listOfReviews = reviews.map((review) => {
         if (review.userId === user.id){
             return <ReviewCell
                         key={review.id}
                         review={review}
-                        onReviewDelete={props.onReviewDelete}
+                        onReviewDelete={onReviewDelete}
                     />
         }
-    }) : null;
+    });
     return (
         <tr className={user.isAdmin ? "isAdmin" : ""}>
             <td>
-                <span className="tableSpan" onClick={user.isAdmin ? () => props.onUserEdit(user) : null}>{user.firstName} {user.lastName}</span>
+                <span className="tableSpan" onClick={user.isAdmin ? () => onUserEdit(user) : null}>{user.firstName} {user.lastName}</span>
                 {!user.isAdmin &&
-                    <i className="material-icons deleteBtn" onClick={() => props.onUserDelete(user)}>clear</i>
+                    <i className="material-icons deleteBtn" onClick={() => onUserDelete(user)}>clear</i>
                 }
             </td>
             <td>

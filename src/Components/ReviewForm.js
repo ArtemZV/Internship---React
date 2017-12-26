@@ -11,15 +11,16 @@ class ReviewForm extends React.Component{
 
     handleSubmit = (event) => {
         event.preventDefault();
-        const   {reviewText, selectedUser} = this.state,
-                review = {
+        const {reviewText, selectedUser} = this.state;
+        const {onReviewCreate} = this.props;
+        const review = {
                     id: Math.ceil(Math.random()*100),
                     reviewText,
                     userId: parseInt(selectedUser, 10),
                     isAproved: false
                 };
         this.setState({reviewText: '', selectedUser: '', disabled: true})
-        this.props.onReviewCreate(review);
+        onReviewCreate(review);
     }
 
     handleChange = (event) => {
@@ -29,38 +30,30 @@ class ReviewForm extends React.Component{
     }
 
     handleBlur = (event) => {
-        const {errors} = this.state,
-                target = event.target;
+        let {errors} = this.state;
+        const target = event.target;
         if (target.value.trim() === '') {
-            this.setState({
-                errors: {
-                    [target.name]: {
-                        message: `${target.name} is required`
-                    },
-                    ...errors
-                }
-            })
+            errors = {
+                [target.name]: {
+                    message: `${target.name} is required`
+                },
+                ...errors
+            }
         }
         else {
             delete errors[target.name];
-            this.setState({
-                errors: errors
-            })
         }
-        this.validateForm();
-    }
 
-    validateForm = () => {
-        if (this.state.selectedUser !== '' && this.state.reviewText.trim() !== ''){
-            this.setState({disabled: false})
+        if (Object.keys(errors).length === 0) {
+            this.setState({disabled: false, errors})
         }
         else {
-            this.setState({disabled: true});
+            this.setState({disabled: true, errors});
         }
     }
 
     render(){
-        const {selectedUser, reviewText, errors, disabled} = this.state
+        const {selectedUser, reviewText, errors, disabled} = this.state;
         const {users} = this.props;
         const selectItems = users.map((user) => {
             if (!user.isAdmin) {
@@ -82,7 +75,7 @@ class ReviewForm extends React.Component{
                             <option value={''} children="Select user" />
                             {selectItems}
                         </select>
-                        {errors.selectedUser && errors.selectedUser.message}
+                        <span>{errors.selectedUser && errors.selectedUser.message}</span>
                     </div>
                     <div className={errors.reviewText ? "invalid" : ""}>
                         <textarea
@@ -92,7 +85,7 @@ class ReviewForm extends React.Component{
                             name="reviewText"
                             onBlur={this.handleBlur}
                         />
-                        {errors.reviewText && errors.reviewText.message}
+                        <span>{errors.reviewText && errors.reviewText.message}</span>
                     </div>
                 </div>
                 <button

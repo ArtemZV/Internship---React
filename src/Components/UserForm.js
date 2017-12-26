@@ -10,17 +10,17 @@ class UserForm extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        const   {firstName, lastName} = this.state,
-                {updateUser} = this.props;
+        const {firstName, lastName} = this.state;
+        const {editingUser, onUserFormSubmit} = this.props;
 
         const user = {
             firstName,
             lastName,
-            id: updateUser ? updateUser.id : Math.ceil(Math.random()*100),
-            isAdmin: updateUser ? true : false,
-            reviews: updateUser ? updateUser.reviews : []
+            id: editingUser ? editingUser.id : Math.ceil(Math.random()*100),
+            isAdmin: editingUser ? true : false,
+            reviews: editingUser ? editingUser.reviews : []
         }
-        this.props.onUserFormChange(user);
+        onUserFormSubmit(user);
         this.setState({firstName: '', lastName: '', disabled: true});
     }
 
@@ -31,46 +31,37 @@ class UserForm extends React.Component {
     }
 
     handleBlur = (event) => {
-        const {errors} = this.state;
+        let {errors} = this.state;
         if (event.target.value.trim() === '') {
-            this.setState({
-                errors: {
-                    [event.target.name]: {
-                        message: "Please fill this field"
-                    },
-                    ...errors
-                }
-            })
+            errors = {
+                [event.target.name]: {
+                    message: "Please fill this field"
+                },
+                ...errors
+            }
         }
         else {
             delete errors[event.target.name];
-            this.setState({errors})
         }
-        this.validateForm();
-    }
 
-    validateForm = () => {
-        if (this.state.firstName.trim() !== '' && this.state.lastName.trim() !== '') {
-            this.setState({disabled: false})
+        if (Object.keys(errors).length === 0) {
+            this.setState({disabled: false, errors})
         }
         else {
-            this.setState({disabled: true});
+            this.setState({disabled: true, errors});
         }
     }
 
     componentWillReceiveProps(props){
-        const {updateUser} = props;
-        if (updateUser) {
-            this.setState({firstName : updateUser.firstName, lastName: updateUser.lastName, disabled: false, errors: {}})
-        }
-        else {
-            this.setState({firstName : '', lastName: ''})
+        const {editingUser} = props;
+        if (editingUser) {
+            this.setState({firstName : editingUser.firstName, lastName: editingUser.lastName, disabled: false, errors: {}})
         }
     };
 
     render() {
-        const   {firstName, lastName, errors, disabled} = this.state,
-                {updateUser} = this.props;
+        const {firstName, lastName, errors, disabled} = this.state;
+        const {editingUser} = this.props;
 
         return (
             <form onSubmit={this.handleSubmit} autoComplete="off" id="userForm">
@@ -84,7 +75,7 @@ class UserForm extends React.Component {
                             onChange={this.handleInputChange}
                             onBlur={this.handleBlur}
                         />
-                        {errors.firstName && errors.firstName.message}
+                        <span>{errors.firstName && errors.firstName.message}</span>
                     </div>
                     <div className={errors.lastName ? "invalid" : ""}>
                         <input
@@ -94,11 +85,11 @@ class UserForm extends React.Component {
                             onChange={this.handleInputChange}
                             onBlur={this.handleBlur}
                         />
-                        {errors.lastName && errors.lastName.message}
+                        <span>{errors.lastName && errors.lastName.message}</span>
                     </div>
                 </div>
                 <button className="simpleButton" type="submit" disabled={disabled}>
-                    {updateUser ? "Update user" : "Add user"}
+                    {editingUser ? "Update user" : "Add user"}
                 </button>
             </form>
         );

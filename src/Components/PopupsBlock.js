@@ -6,15 +6,16 @@ class Popup extends React.Component {
     }
 
     componentDidMount(){
+        const {onPopupClose, id} = this.props;
         setTimeout(() => this.setState({show: false}), 1000);
-        setTimeout(() => this.props.onPopupClose(this.props.id), 1800);
+        setTimeout(() => onPopupClose(id), 1800);
     }
 
     render() {
-        const classes = this.state.show ? "popup" : "popup close",
-                {msg, id} = this.props
+        const classes = this.state.show ? "popup" : "popup close";
+        const {msg} = this.props
         return (
-            <div className={classes} datapopupid={id}>
+            <div className={classes}>
                 {msg}
             </div>
         );
@@ -23,13 +24,15 @@ class Popup extends React.Component {
 
 class PopupsBlock extends React.Component {
     render() {
-        const listOfPopups = this.props.popups.map((msg) =>
+        const {onPopupClose, popups} = this.props;
+        const listOfPopups = popups.map((msg) =>
             <Popup
                 key={msg.id}
                 msg={msg.message}
                 id={msg.id}
-                onPopupClose={this.props.onPopupClose}
-            />);
+                onPopupClose={onPopupClose}
+            />
+        );
 
         return (
             <div id="popupsBlock">
