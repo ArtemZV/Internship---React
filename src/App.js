@@ -4,8 +4,6 @@ import UsersTable from './Components/UsersTable';
 import ReviewForm from './Components/ReviewForm';
 import Popup from './Components/Popup'
 
-import './App.css';
-
 const usersArr = [
     {firstName: "Test", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: false},
     {firstName: "Test", lastName: "User 2", id: Math.ceil(Math.random()*100), isAdmin: false},
