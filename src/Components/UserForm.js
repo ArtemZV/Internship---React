@@ -17,7 +17,7 @@ class UserForm extends React.Component {
             firstName,
             lastName,
             id: editingUser ? editingUser.id : Math.ceil(Math.random()*100),
-            isAdmin: editingUser ? true : false,
+            isAdmin: editingUser ? editingUser.isAdmin : false,
             reviews: editingUser ? editingUser.reviews : []
         }
         onUserFormSubmit(user);
