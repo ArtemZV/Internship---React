@@ -33,10 +33,11 @@ class App extends Component {
       const index = users.indexOf(this.state.updateUser);
       users.splice(index, 1, user);
       this.setState({updateUser: null, users: users});
-      popups.push("User updated");
+      popups.push({message: "User updated", id: Math.ceil(Math.random()*100)});
     }
     else  {
-      this.setState({users: users.concat(user)});
+      users.concat(user)
+      this.setState({users: users});
       popups.push({message: "New user create", id: Math.ceil(Math.random()*100)});
     }
     this.setState({popups: popups});
@@ -72,10 +73,7 @@ class App extends Component {
           popups = this.state.popups;
     reviews.splice(index, 1);
     popups.push({message: "Review deleted", id: Math.ceil(Math.random()*100)});
-    this.setState({
-      reviews: reviews,
-      popups: popups
-    });
+    this.setState({ reviews: reviews, popups: popups});
   }
 
   handlePopupClose = (id) => {

@@ -14,7 +14,7 @@ class ReviewForm extends React.Component{
         const review = {
             id: Math.ceil(Math.random()*100),
             reviewText: this.state.reviewText,
-            userId: +this.state.selectedUser,
+            userId: parseInt(this.state.selectedUser, 10),
             isAproved: false
         }
         this.setState({reviewText: '', selectedUser: '', disabled: true})
@@ -50,7 +50,7 @@ class ReviewForm extends React.Component{
 
     validateForm = () => {
         if (this.state.selectedUser !== '' && this.state.reviewText.trim() !== ''){
-            this.setState({disabled: false});
+            this.setState({disabled: false})
         }
         else {
             this.setState({disabled: true});
