@@ -29,7 +29,7 @@ class App extends Component {
   handleUserFormChange = (user) => {
     const {popups, users, updateUser} = this.state;
     if (updateUser){
-      const index = users.find((user, index) => {if (user.id === updateUser.id) return index});
+      const index = users.findIndex(user => user.id === updateUser.id);
       users.splice(index, 1, user);
       popups.push({message: "User updated", id: Math.ceil(Math.random()*100)});
     }
@@ -53,7 +53,7 @@ class App extends Component {
           updateUser = (this.state.updateUser && this.state.updateUser.id === user.id) ? null : this.state.updateUser;
 
     user.reviews.forEach((review) => {reviews.splice(reviews.indexOf(review), 1)});
-    const index = users.find((u, index) => {if (user.id === u.id) return index});
+    const index = users.findIndex(u => user.id === u.id);
     users.splice(index, 1);
     popups.push({message: "User deleted", id: Math.ceil(Math.random()*100)});
 
@@ -62,18 +62,22 @@ class App extends Component {
 
   handleDeleteReview = (review) => {
     const {reviews, popups} = this.state,
-          index = reviews.find((r, index) => {if (review.id === r.id) return index});
+          index = reviews.findIndex(rev => review.id === rev.id);
 
     reviews.splice(index, 1);
     popups.push({message: "Review deleted", id: Math.ceil(Math.random()*100)});
-    this.setState({ reviews, popups});
+    this.setState({reviews, popups});
   }
 
   handlePopupClose = (id) => {
     const popups = this.state.popups,
-          index = popups.find((popup, index) => {if (popup.id === id) return index;});
+          index = popups.findIndex(popup => popup.id === id);
     popups.splice(index, 1);
-    this.setState({ popups});
+    this.setState({popups});
+  }
+
+  handleUserEdit = (updateUser) => {
+    this.setState({updateUser});
   }
 
   render() {
@@ -92,6 +96,7 @@ class App extends Component {
             reviews={reviews}
             onUserDelete={this.handleDeleteUser}
             onReviewDelete={this.handleDeleteReview}
+            onUserEdit={this.handleUserEdit}
           />
         </div>
         <PopupsBlock popups={popups} onPopupClose={this.handlePopupClose}/>

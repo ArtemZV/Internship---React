@@ -26,7 +26,7 @@ function TableUserRow(props){
     return (
         <tr className={user.isAdmin ? "isAdmin" : ""}>
             <td>
-                <span className="tableSpan" onClick={user.isAdmin ? () => props.onUserUpdate(user) : null}>{user.firstName} {user.lastName}</span>
+                <span className="tableSpan" onClick={user.isAdmin ? () => props.onUserEdit(user) : null}>{user.firstName} {user.lastName}</span>
                 {!user.isAdmin &&
                     <i className="material-icons deleteBtn" onClick={() => props.onUserDelete(user)}>clear</i>
                 }
@@ -51,8 +51,8 @@ class UsersTable extends Component{
         this.props.onReviewDelete(review);
     }
 
-    handleUserUpdate = (user) => {
-        this.props.onUserUpdate(user);
+    handleUserEdit = (user) => {
+        this.props.onUserEdit(user);
     }
 
     render(){
@@ -74,7 +74,7 @@ class UsersTable extends Component{
                 reviews={reviews}
                 onUserDelete={this.handleUserDelete}
                 onReviewDelete={this.handleReviewDelete}
-                onUserUpdate={this.handleUserUpdate}
+                onUserEdit={this.handleUserEdit}
             />
         );
 
