@@ -11,12 +11,13 @@ class ReviewForm extends React.Component{
 
     handleSubmit = (event) => {
         event.preventDefault();
-        const review = {
-            id: Math.ceil(Math.random()*100),
-            reviewText: this.state.reviewText,
-            userId: parseInt(this.state.selectedUser, 10),
-            isAproved: false
-        }
+        const   {reviewText, selectedUser} = this.state,
+                review = {
+                    id: Math.ceil(Math.random()*100),
+                    reviewText,
+                    userId: parseInt(selectedUser, 10),
+                    isAproved: false
+                };
         this.setState({reviewText: '', selectedUser: '', disabled: true})
         this.props.onReviewCreate(review);
     }
@@ -28,19 +29,20 @@ class ReviewForm extends React.Component{
     }
 
     handleBlur = (event) => {
-        const errors = this.state.errors;
-        if (event.target.value.trim() === '') {
+        const {errors} = this.state,
+                target = event.target;
+        if (target.value.trim() === '') {
             this.setState({
                 errors: {
-                    [event.target.name]: {
-                        message: `${event.target.name} is required`
+                    [target.name]: {
+                        message: `${target.name} is required`
                     },
                     ...errors
                 }
             })
         }
         else {
-            delete errors[event.target.name];
+            delete errors[target.name];
             this.setState({
                 errors: errors
             })
@@ -59,7 +61,7 @@ class ReviewForm extends React.Component{
 
     render(){
         const {selectedUser, reviewText, errors, disabled} = this.state
-        const users = this.props.users;
+        const {users} = this.props;
         const selectItems = users.map((user) => {
             if (!user.isAdmin) {
                 return <option key={user.id} value={user.id}>{user.firstName} {user.lastName}</option>

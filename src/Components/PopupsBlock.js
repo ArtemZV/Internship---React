@@ -5,18 +5,17 @@ class Popup extends React.Component {
         show : true
     }
 
-    handleAnimationEnd = (animProps) => {
-        animProps.animationName === "rightAppear" && setTimeout(() => this.setState({show: false}), 1000)
-        if (animProps.animationName === "erase") {
-            this.props.onPopupClose(animProps.target.getAttribute("datapopupid"));
-        };
+    componentDidMount(){
+        setTimeout(() => this.setState({show: false}), 1000);
+        setTimeout(() => this.props.onPopupClose(this.props.id), 1800);
     }
 
     render() {
-        const classes = this.state.show ? "popup" : "popup close"
+        const classes = this.state.show ? "popup" : "popup close",
+                {msg, id} = this.props
         return (
-            <div className={classes} onAnimationEnd={this.handleAnimationEnd} datapopupid={this.props.id}>
-                {this.props.msg}
+            <div className={classes} datapopupid={id}>
+                {msg}
             </div>
         );
     }

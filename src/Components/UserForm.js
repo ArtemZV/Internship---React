@@ -10,13 +10,15 @@ class UserForm extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
+        const   {firstName, lastName} = this.state,
+                {updateUser} = this.props;
 
         const user = {
-            firstName: this.state.firstName,
-            lastName: this.state.lastName,
-            id: this.props.updateUser ? this.props.updateUser.id : Math.ceil(Math.random()*100),
-            isAdmin: this.props.updateUser ? true : false,
-            reviews: this.props.updateUser ? this.props.updateUser.reviews : []
+            firstName,
+            lastName,
+            id: updateUser ? updateUser.id : Math.ceil(Math.random()*100),
+            isAdmin: updateUser ? true : false,
+            reviews: updateUser ? updateUser.reviews : []
         }
         this.props.onUserFormChange(user);
         this.setState({firstName: '', lastName: '', disabled: true});
@@ -29,7 +31,7 @@ class UserForm extends React.Component {
     }
 
     handleBlur = (event) => {
-        const errors = this.state.errors;
+        const {errors} = this.state;
         if (event.target.value.trim() === '') {
             this.setState({
                 errors: {
@@ -42,9 +44,7 @@ class UserForm extends React.Component {
         }
         else {
             delete errors[event.target.name];
-            this.setState({
-                errors: errors
-            })
+            this.setState({errors})
         }
         this.validateForm();
     }
@@ -59,8 +59,9 @@ class UserForm extends React.Component {
     }
 
     componentWillReceiveProps(props){
-        if (props.updateUser) {
-            this.setState({firstName : props.updateUser.firstName, lastName: props.updateUser.lastName, disabled: false, errors: {}})
+        const {updateUser} = props;
+        if (updateUser) {
+            this.setState({firstName : updateUser.firstName, lastName: updateUser.lastName, disabled: false, errors: {}})
         }
         else {
             this.setState({firstName : '', lastName: ''})
@@ -68,38 +69,39 @@ class UserForm extends React.Component {
     };
 
     render() {
-        const {firstName, lastName, errors, disabled} = this.state;
+        const   {firstName, lastName, errors, disabled} = this.state,
+                {updateUser} = this.props;
 
-      return (
-        <form onSubmit={this.handleSubmit} autoComplete="off" id="userForm">
-            User input:
-            <div>
-                <div className={errors.firstName ? "invalid" : ""}>
-                    <input
-                        placeholder="First Name"
-                        value={firstName}
-                        name="firstName"
-                        onChange={this.handleInputChange}
-                        onBlur={this.handleBlur}
-                    />
-                    {errors.firstName && errors.firstName.message}
+        return (
+            <form onSubmit={this.handleSubmit} autoComplete="off" id="userForm">
+                User input:
+                <div>
+                    <div className={errors.firstName ? "invalid" : ""}>
+                        <input
+                            placeholder="First Name"
+                            value={firstName}
+                            name="firstName"
+                            onChange={this.handleInputChange}
+                            onBlur={this.handleBlur}
+                        />
+                        {errors.firstName && errors.firstName.message}
+                    </div>
+                    <div className={errors.lastName ? "invalid" : ""}>
+                        <input
+                            placeholder="Last Name"
+                            value={lastName}
+                            name="lastName"
+                            onChange={this.handleInputChange}
+                            onBlur={this.handleBlur}
+                        />
+                        {errors.lastName && errors.lastName.message}
+                    </div>
                 </div>
-                <div className={errors.lastName ? "invalid" : ""}>
-                    <input
-                        placeholder="Last Name"
-                        value={lastName}
-                        name="lastName"
-                        onChange={this.handleInputChange}
-                        onBlur={this.handleBlur}
-                    />
-                    {errors.lastName && errors.lastName.message}
-                </div>
-            </div>
-            <button className="simpleButton" type="submit" disabled={disabled}>
-                {this.props.updateUser ? "Update user" : "Add user"}
-            </button>
-        </form>
-      );
+                <button className="simpleButton" type="submit" disabled={disabled}>
+                    {updateUser ? "Update user" : "Add user"}
+                </button>
+            </form>
+        );
     }
 }
 

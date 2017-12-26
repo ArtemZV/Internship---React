@@ -5,9 +5,9 @@ import ReviewForm from './Components/ReviewForm';
 import PopupsBlock from './Components/PopupsBlock'
 
 const usersArr = [
-    {firstName: "Test", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: false},
-    {firstName: "Test", lastName: "User 2", id: Math.ceil(Math.random()*100), isAdmin: false},
-    {firstName: "Default", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: true}
+  {firstName: "Test", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: false},
+  {firstName: "Test", lastName: "User 2", id: Math.ceil(Math.random()*100), isAdmin: false},
+  {firstName: "Default", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: true}
 ]
 
 const reviewsArr = [
@@ -27,82 +27,74 @@ class App extends Component {
   };
 
   handleUserFormChange = (user) => {
-    const popups = this.state.popups,
-          users = this.state.users;
-    if (this.state.updateUser){
-      const index = users.indexOf(this.state.updateUser);
+    const {popups, users, updateUser} = this.state;
+    if (updateUser){
+      const index = users.find((user, index) => {if (user.id === updateUser.id) return index});
       users.splice(index, 1, user);
-      this.setState({updateUser: null, users: users});
       popups.push({message: "User updated", id: Math.ceil(Math.random()*100)});
     }
-    else  {
-      users.concat(user)
-      this.setState({users: users});
+    else {
+      users.push(user)
       popups.push({message: "New user create", id: Math.ceil(Math.random()*100)});
     }
-    this.setState({popups: popups});
+    this.setState({updateUser: null, popups, users});
   }
 
   handleReviewCreated = (review) => {
-    const reviews = this.state.reviews;
-    this.setState({reviews: reviews.concat(review)});
-
-    const popups = this.state.popups;
+    const {reviews, popups} = this.state;
+    reviews.push(review);
     popups.push({message: "New review create", id: Math.ceil(Math.random()*100)});
-    this.setState({popups: popups});
+
+    this.setState({review, popups});
   }
 
   handleDeleteUser = (user) => {
-    const reviews = this.state.reviews;
+    const {reviews, users, popups} = this.state,
+          updateUser = (this.state.updateUser && this.state.updateUser.id === user.id) ? null : this.state.updateUser;
+
     user.reviews.forEach((review) => {reviews.splice(reviews.indexOf(review), 1)});
+    const index = users.find((u, index) => {if (user.id === u.id) return index});
+    users.splice(index, 1);
+    popups.push({message: "User deleted", id: Math.ceil(Math.random()*100)});
 
-    const users = this.state.users;
-    users.splice(users.indexOf(user), 1);
-
-    const updUser = (this.state.updateUser && this.state.updateUser.id === user.id) ? null : this.state.updateUser;
-    this.setState({users: users, reviews: reviews, updateUser: updUser});
-
-    const popups = this.state.popups;
-    popups.push({message: "User deleted", id: Math.ceil(Math.random()*100)})
-    this.setState({popups: popups});
+    this.setState({popups, users, reviews, updateUser});
   }
 
   handleDeleteReview = (review) => {
-    const reviews = this.state.reviews,
-          index = reviews.indexOf(review),
-          popups = this.state.popups;
+    const {reviews, popups} = this.state,
+          index = reviews.find((r, index) => {if (review.id === r.id) return index});
+
     reviews.splice(index, 1);
     popups.push({message: "Review deleted", id: Math.ceil(Math.random()*100)});
-    this.setState({ reviews: reviews, popups: popups});
+    this.setState({ reviews, popups});
   }
 
   handlePopupClose = (id) => {
     const popups = this.state.popups,
-          index = popups.find((popup, index) => {
-            if (popup.id === id) return index;
-          });
+          index = popups.find((popup, index) => {if (popup.id === id) return index;});
     popups.splice(index, 1);
-    this.setState({popups: popups});
+    this.setState({ popups});
   }
 
   render() {
+    const {updateUser, users, reviews, popups} = this.state;
     return (
       <div className="App">
         <div className="inlineBlock">
-          <UserForm updateUser={this.state.updateUser} onUserFormChange={this.handleUserFormChange} />
+          <UserForm updateUser={updateUser} onUserFormChange={this.handleUserFormChange} />
         </div>
         <div className="inlineBlock">
-          <ReviewForm users={this.state.users} onReviewCreate={this.handleReviewCreated} />
+          <ReviewForm users={users} onReviewCreate={this.handleReviewCreated} />
         </div>
         <div className="wideBlock">
           <UsersTable
-            users={this.state.users}
-            reviews={this.state.reviews}
+            users={users}
+            reviews={reviews}
             onUserDelete={this.handleDeleteUser}
             onReviewDelete={this.handleDeleteReview}
           />
         </div>
-        <PopupsBlock popups={this.state.popups} onPopupClose={this.handlePopupClose}/>
+        <PopupsBlock popups={popups} onPopupClose={this.handlePopupClose}/>
       </div>
     );
   }
