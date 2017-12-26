@@ -54,8 +54,7 @@ class App extends Component {
 
   handleDeleteUser = (user) => {
     user.reviews.forEach((review) => {this.state.reviews.splice(this.state.reviews.indexOf(review), 1)});
-    const index = this.state.users.indexOf(user);
-    this.state.users.splice(index, 1);
+    this.state.users.splice(this.state.users.indexOf(user), 1);
     const updUser = (this.state.updateUser && this.state.updateUser.id === user.id) ? null : this.state.updateUser;
     this.setState({users: this.state.users, reviews: this.state.reviews, updateUser: updUser});
     this.state.popups.push(<Popup key={Math.random()} message="User deleted"/>);
