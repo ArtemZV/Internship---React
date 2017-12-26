@@ -2,105 +2,97 @@ import React, { Component } from 'react';
 import UserForm from './Components/UserForm';
 import UsersTable from './Components/UsersTable';
 import ReviewForm from './Components/ReviewForm';
+import Popup from './Components/Popup'
 
 import './App.css';
 
 const usersArr = [
     {firstName: "Test", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: false},
     {firstName: "Test", lastName: "User 2", id: Math.ceil(Math.random()*100), isAdmin: false},
-    {firstName: "Default", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: true}    
+    {firstName: "Default", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: true}
 ]
 
 const reviewsArr = [
-  {reviewText:'test review 1', id: Math.ceil(Math.random()*100), userId:usersArr[0].id, isAproved: true}, 
+  {reviewText:'test review 1', id: Math.ceil(Math.random()*100), userId:usersArr[0].id, isAproved: true},
   {reviewText: 'test review 2', id: Math.ceil(Math.random()*100), userId:usersArr[0].id, isAproved: true},
   {reviewText:'test review 3', id: Math.ceil(Math.random()*100), userId:usersArr[1].id, isAproved: true},
   {reviewText: 'test review 4', id: Math.ceil(Math.random()*100), userId:usersArr[1].id, isAproved: true},
   {reviewText: 'default review', id: Math.ceil(Math.random()*100), userId:usersArr[2].id, isAproved: true}
 ]
 
-const style = {
-  inlineBlock: {display: 'inline-block', width: '50%', marginTop: '10px', verticalAlign: 'top', height: '280px'},
-  wideBlock: {width: '80%', marginTop: '15px', marginLeft: 'auto', marginRight: 'auto'}
-}
-
 class App extends Component {
   constructor(props) {
     super(props);
-    this.handleUserFormChange = this.handleUserFormChange.bind(this);
-    this.handleReviewCreated = this.handleReviewCreated.bind(this);
-    this.handleDeleteUser = this.handleDeleteUser.bind(this);
-    this.handleDeleteReview = this.handleDeleteReview.bind(this); 
-    this.handleUserUpdate = this.handleUserUpdate.bind(this);   
-    usersArr.forEach((user) => {
-      user.name = `${user.firstName} ${user.lastName}`    
-    });
 
-    reviewsArr.forEach((review) =>
-            {
-                usersArr.forEach((user) => {
-                    if (!user.reviews) user.reviews = [];
-                    if (user.id == review.userId && user.reviews.indexOf(review) == -1) user.reviews.push(review);
-                })
-            }
-    );
-
-    this.state = {users: usersArr, reviews: reviewsArr, updateUser: null};
+    this.state = {
+      users: usersArr,
+      reviews: reviewsArr,
+      updateUser: null,
+      popups: []
+    };
   }
 
-  handleUserFormChange(user) {
+  handleUserFormChange = (user) => {
     if (this.state.updateUser){
-      this.setState((prevState) => {
-        const index = this.state.users.indexOf(prevState.updateUser);
-        prevState.users.splice(index, 1, user);
-        return {updateUser: null, users: prevState.users};
-      });
+      const index = this.state.users.indexOf(this.state.updateUser);
+      this.state.users.splice(index, 1, user);
+      this.setState({updateUser: null, users: this.state.users});
+      this.state.popups.push(<Popup key={Math.random()} message="User updated"/>);
     }
-    else  this.setState((prevState) => ({users: prevState.users.concat(user)}));
+    else  {
+      this.setState({users: this.state.users.concat(user)});
+      this.state.popups.push(<Popup key={Math.random()} message="New user create"/>);
+    }
+    this.setState({popups:this.state.popups});
   }
 
-  handleReviewCreated(review){
-    this.setState((prevState) => ({reviews: prevState.reviews.concat(review)}));
+  handleReviewCreated = (review) => {
+    this.setState({reviews: this.state.reviews.concat(review)});
+    this.state.popups.push(<Popup key={Math.random()} message="New review create"/>);
+    this.setState({popups:this.state.popups});
   }
 
-  handleDeleteUser(user){
+  handleDeleteUser = (user) => {
+    user.reviews.forEach((review) => {this.state.reviews.splice(this.state.reviews.indexOf(review), 1)});
     const index = this.state.users.indexOf(user);
-    this.setState((prevState) => {
-      prevState.users.splice(index, 1);
-      user.reviews.forEach((review) => {prevState.reviews.splice(prevState.reviews.indexOf(review), 1)});
-      return {users: prevState.users, reviews: prevState.reviews, updateUser: (prevState.updateUser && prevState.updateUser.id == user.id) ? null : prevState.updateUser};
-    });
+    this.state.users.splice(index, 1);
+    this.setState({users: this.state.users, reviews: this.state.reviews, updateUser: (this.state.updateUser && this.state.updateUser.id == user.id) ? null : this.state.updateUser});
+    this.state.popups.push(<Popup key={Math.random()} message="User deleted"/>);
+    this.setState({popups:this.state.popups});
   }
 
-  handleDeleteReview(review){
+  handleDeleteReview = (review) => {
     const index = this.state.reviews.indexOf(review);
-    this.setState((prevState) => {
-      prevState.reviews.splice(index, 1);
-      return {reviews: prevState.reviews};
-    });
+    this.state.reviews.splice(index, 1);
+    this.setState({reviews: this.state.reviews});
+    this.state.popups.push(<Popup key={Math.random()} message="Review deleted"/>);
+    this.setState({popups:this.state.popups});
   }
 
-  handleUserUpdate(user){
+  handleUserUpdate = (user) => {
     this.setState({updateUser: user});
   }
 
   render() {
     return (
-      <div className="App">        
-        <div style={style.inlineBlock}>
-          <UserForm name="Test" updateUser={this.state.updateUser} onUserFormChange={this.handleUserFormChange} />
+      <div className="App">
+        <div className='inlineBlock'>
+          <UserForm updateUser={this.state.updateUser} onUserFormChange={this.handleUserFormChange} />
         </div>
-        <div style={style.inlineBlock}>
+        <div className='inlineBlock'>
           <ReviewForm users={this.state.users} onReviewCreate={this.handleReviewCreated} />
         </div>
-        <div style={style.wideBlock}>                    
-          <UsersTable 
-            users={this.state.users} 
-            reviews={this.state.reviews} 
-            onUserDelete={this.handleDeleteUser} 
+        <div className='wideBlock'>
+          <UsersTable
+            users={this.state.users}
+            reviews={this.state.reviews}
+            onUserDelete={this.handleDeleteUser}
             onReviewDelete={this.handleDeleteReview}
             onUserUpdate={this.handleUserUpdate}
           />
+        </div>
+        <div id="popupsBlock">
+          {this.state.popups}
         </div>
       </div>
     );

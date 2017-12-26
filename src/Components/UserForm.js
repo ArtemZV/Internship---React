@@ -1,94 +1,99 @@
 import React, { Component } from 'react';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import Snackbar from 'material-ui/Snackbar';
 
 const newUserMsg = "New user added to table";
 const updUserMsg = "User updated";
 
 class UserForm extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            firstName: '', 
-            lastName: '',
-            shwMsg: false,
-            message: ''
-        }
-
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);      
-        this.handleRequestClose = this.handleRequestClose.bind(this);
+    state = {
+        firstName: '',
+        lastName: '',
+        errors: {},
+        disabled: true
     }
 
-    handleSubmit(event) {
+    handleSubmit = (event) => {
         event.preventDefault();
-        if (!this.state.firstName.match(/^[A-Za-zА-ЯЁа-яё\s]+$/) 
-        || !this.state.lastName.match(/^[A-Za-zА-ЯЁа-яё\s]+$/) ) return;
+
         const user = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
-            name:`${this.state.firstName} ${this.state.lastName}`,
             id: this.props.updateUser ? this.props.updateUser.id : Math.ceil(Math.random()*100),
             isAdmin: this.props.updateUser ? true : false,
             reviews: this.props.updateUser ? this.props.updateUser.reviews : []
         }
-        this.props.updateUser ? this.setState({shwMsg: true, message: updUserMsg}) : this.setState({shwMsg: true, message: newUserMsg});
         this.props.onUserFormChange(user);
-        this.setState({firstName: '', lastName: ''});        
+        this.setState({firstName: '', lastName: '', disabled: true});
     }
 
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-
+    handleInputChange = (event) => {
         this.setState({
-            [name]: value
+            [event.target.name]: event.target.value
         });
     }
 
-    handleRequestClose() {
-        this.setState({
-            shwMsg: false,
-        });
-    };    
+    handleBlur = (event) => {
+        if (event.target.value.trim() === '') {
+            this.setState({
+                errors: {
+                    [event.target.name]: {
+                        message: `Please fill this field`
+                    },
+                    ...this.state.errors
+                }
+            })
+        }
+        else {
+            delete this.state.errors[event.target.name];
+            this.setState({
+                errors: this.state.errors
+            })
+        }
+        this.validateForm();
+    }
+
+    validateForm = () => {
+        this.state.firstName.trim() != '' && this.state.lastName.trim() != '' ?
+            this.setState({disabled: false}) : this.setState({disabled: true});
+    }
 
     componentWillReceiveProps(props){
-        if (props.updateUser) this.setState({firstName : props.updateUser.firstName, lastName: props.updateUser.lastName})
+        if (props.updateUser) this.setState({firstName : props.updateUser.firstName, lastName: props.updateUser.lastName, disabled: false, errors: {}})
         else this.setState({firstName : '', lastName: ''})
-    };    
+    };
 
-    render() {        
-        const firstName = this.state.firstName;
-        const lastName = this.state.lastName;
-        
+    render() {
+        const {firstName, lastName, errors, disabled} = this.state;
+
       return (
-        <form onSubmit={this.handleSubmit} autoComplete="off">
+        <form onSubmit={this.handleSubmit} autoComplete="off" id="userForm">
             User input:
-            <div id="userForm">
-                <TextField 
-                 floatingLabelText="First name" 
-                 value={firstName} 
-                 name="firstName" 
-                 onChange={this.handleInputChange}/><br/>                
-                <TextField 
-                 floatingLabelText="Last name" 
-                 value={lastName} 
-                 name="lastName" 
-                 onChange={this.handleInputChange}/>
+            <div>
+                <div className={errors.firstName && 'invalid'}>
+                    <input
+                        placeholder="First Name"
+                        value={firstName}
+                        name="firstName"
+                        onChange={this.handleInputChange}
+                        onBlur={this.handleBlur}
+                    />
+                    {errors.firstName && errors.firstName.message}
+                </div>
+                <div className={errors.lastName && 'invalid'}>
+                    <input
+                        placeholder="Last Name"
+                        value={lastName}
+                        name="lastName"
+                        onChange={this.handleInputChange}
+                        onBlur={this.handleBlur}
+                    />
+                    {errors.lastName && errors.lastName.message}
+                </div>
             </div>
-            <RaisedButton primary={true} label="Add user" type="submit" disabled={firstName.trim() == '' || lastName.trim() == ''}/>
-            <Snackbar
-                open={this.state.shwMsg}
-                message={this.state.message}
-                autoHideDuration={2000}
-                onRequestClose={this.handleRequestClose}
-            />
-        </form>   
+            <button className="simpleButton" type="submit" disabled={disabled}>
+                {this.props.updateUser ?'Update user' : 'Add user'}
+            </button>
+        </form>
       );
-             
     }
 }
 

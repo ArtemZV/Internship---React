@@ -17,4 +17,6 @@ yarn-debug.log*
 yarn-error.log*
 
 .eslintrc.json
-.vscode/launch.json
+.vscode
+/config
+/scripts
