@@ -56,7 +56,8 @@ class App extends Component {
     user.reviews.forEach((review) => {this.state.reviews.splice(this.state.reviews.indexOf(review), 1)});
     const index = this.state.users.indexOf(user);
     this.state.users.splice(index, 1);
-    this.setState({users: this.state.users, reviews: this.state.reviews, updateUser: (this.state.updateUser && this.state.updateUser.id == user.id) ? null : this.state.updateUser});
+    const updUser = (this.state.updateUser && this.state.updateUser.id === user.id) ? null : this.state.updateUser;
+    this.setState({users: this.state.users, reviews: this.state.reviews, updateUser: updUser});
     this.state.popups.push(<Popup key={Math.random()} message="User deleted"/>);
     this.setState({popups:this.state.popups});
   }
@@ -76,13 +77,13 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className='inlineBlock'>
+        <div className="inlineBlock">
           <UserForm updateUser={this.state.updateUser} onUserFormChange={this.handleUserFormChange} />
         </div>
-        <div className='inlineBlock'>
+        <div className="inlineBlock">
           <ReviewForm users={this.state.users} onReviewCreate={this.handleReviewCreated} />
         </div>
-        <div className='wideBlock'>
+        <div className="wideBlock">
           <UsersTable
             users={this.state.users}
             reviews={this.state.reviews}
