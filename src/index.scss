@@ -223,12 +223,19 @@ body {
     }
 
     input{
-        margin: 0 auto;
-        height: 36px;
-        box-sizing: border-box;
-        display: block;
         border: none;
         border-bottom: 2px solid #6b6767;
+        box-sizing: border-box;
+        display: block;
+        font-family: sans-serif;
+        font-size: 18px;
+        height: 36px;
+        margin: 0 auto;
+    }
+
+    input::placeholder{
+        font-family: sans-serif;
+        font-size: 18px;
     }
 }
 
@@ -239,23 +246,36 @@ body {
     }
 
     textarea{
+        box-sizing: border-box;
+        font-family: sans-serif;
+        font-size: 18px;
+        height: 36px;
         resize: none;
+        padding-top: 8px
+    }
+
+    textarea::placeholder{
+        font-family: sans-serif;
+        font-size: 18px;
     }
 
     select {
+        font-family: sans-serif;
+        font-size: 18px;
         height: 36px;
     }
 
     select, textarea{
-        width: 180px;
         border: none;
         background-color: white;
         border-bottom: 2px solid #6b6767;
-        color:#6b6767;
-        font-family: Arial;
         display: block;
         margin: 0 auto;
+        width: 180px;
+    }
 
+    select option:first-child{
+        color:#6b6767;
     }
 
     .invalid{
@@ -271,12 +291,12 @@ body {
   background-color: rgb(0, 188, 212);
   border: 10px;
   border-radius: 2px;
-  height: 36px;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+  color: rgb(255, 255, 255);
   font-size: 14px;
   font-weight: 500;
-  color: rgb(255, 255, 255);
+  height: 36px;
   letter-spacing: 0px;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
   text-transform: uppercase;
 }
 .simpleButton:hover{

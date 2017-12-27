@@ -1,5 +1,10 @@
 import React from 'react';
 
+const max = 200, min = 0;
+
+function generateId(){
+  return Math.floor(Math.random() * (max - min) + min);
+}
 
 class ReviewForm extends React.Component{
     state = {
@@ -14,7 +19,7 @@ class ReviewForm extends React.Component{
         const {reviewText, selectedUser} = this.state;
         const {onReviewCreate} = this.props;
         const review = {
-                    id: Math.ceil(Math.random()*100),
+                    id: generateId(),
                     reviewText,
                     userId: parseInt(selectedUser, 10),
                     isAproved: false
@@ -30,7 +35,7 @@ class ReviewForm extends React.Component{
     }
 
     handleBlur = (event) => {
-        let {errors} = this.state;
+        let {errors, selectedUser, reviewText} = this.state;
         const target = event.target;
         if (target.value.trim() === '') {
             errors = {
@@ -44,7 +49,7 @@ class ReviewForm extends React.Component{
             delete errors[target.name];
         }
 
-        if (Object.keys(errors).length === 0) {
+        if (Object.keys(errors).length === 0 && selectedUser.trim() !== '' && reviewText.trim() !== '') {
             this.setState({disabled: false, errors})
         }
         else {
@@ -63,7 +68,7 @@ class ReviewForm extends React.Component{
 
         return (
             <form onSubmit={this.handleSubmit} autoComplete="off" id="reviewForm">
-                Review input:
+                <span>Review input:</span>
                 <div>
                     <div className={errors.selectedUser ? "invalid" : ""}>
                         <select

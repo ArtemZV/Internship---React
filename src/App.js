@@ -4,18 +4,24 @@ import UsersTable from './Components/UsersTable';
 import ReviewForm from './Components/ReviewForm';
 import PopupsBlock from './Components/PopupsBlock'
 
+const max = 200, min = 0;
+
+function generateId(){
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
 const usersArr = [
-  {firstName: "Test", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: false},
-  {firstName: "Test", lastName: "User 2", id: Math.ceil(Math.random()*100), isAdmin: false},
-  {firstName: "Admin", lastName: "User", id: Math.ceil(Math.random()*100), isAdmin: true}
+  {firstName: "Test", lastName: "User", id: generateId(), isAdmin: false},
+  {firstName: "Test", lastName: "User 2", id: generateId(), isAdmin: false},
+  {firstName: "Admin", lastName: "User", id: generateId(), isAdmin: true}
 ]
 
 const reviewsArr = [
-  {reviewText: 'test review 1', id: Math.ceil(Math.random()*100), userId:usersArr[0].id, isAproved: true},
-  {reviewText: 'test review 2', id: Math.ceil(Math.random()*100), userId:usersArr[0].id, isAproved: true},
-  {reviewText: 'test review 3', id: Math.ceil(Math.random()*100), userId:usersArr[1].id, isAproved: true},
-  {reviewText: 'test review 4', id: Math.ceil(Math.random()*100), userId:usersArr[1].id, isAproved: true},
-  {reviewText: 'default review', id: Math.ceil(Math.random()*100), userId:usersArr[2].id, isAproved: true}
+  {reviewText: 'test review 1', id: generateId(), userId:usersArr[0].id, isAproved: true},
+  {reviewText: 'test review 2', id: generateId(), userId:usersArr[0].id, isAproved: true},
+  {reviewText: 'test review 3', id: generateId(), userId:usersArr[1].id, isAproved: true},
+  {reviewText: 'test review 4', id: generateId(), userId:usersArr[1].id, isAproved: true},
+  {reviewText: 'default review', id: generateId(), userId:usersArr[2].id, isAproved: true}
 ]
 
 class App extends Component {
@@ -35,11 +41,11 @@ class App extends Component {
         }
         return usr;
       });
-      popups.push({message: "User updated", id: Math.ceil(Math.random()*100)});
+      popups.push({message: "User updated", id: generateId()});
     }
     else {
       users.push(user)
-      popups.push({message: "New user create", id: Math.ceil(Math.random()*100)});
+      popups.push({message: "New user create", id: generateId()});
     }
     this.setState({editingUser: null, popups, users});
   }
@@ -47,7 +53,7 @@ class App extends Component {
   handleReviewCreated = (review) => {
     const {reviews, popups} = this.state;
     reviews.push(review);
-    popups.push({message: "New review create", id: Math.ceil(Math.random()*100)});
+    popups.push({message: "New review create", id: generateId()});
     this.setState({review, popups});
   }
 
@@ -56,7 +62,7 @@ class App extends Component {
 
     user.reviews.forEach((review) => {reviews.splice(reviews.indexOf(review), 1)});
     users = users.filter((usr) => usr.id !== user.id);
-    popups.push({message: "User deleted", id: Math.ceil(Math.random()*100)});
+    popups.push({message: "User deleted", id: generateId()});
 
     this.setState({popups, users, reviews});
   }
@@ -64,7 +70,7 @@ class App extends Component {
   handleDeleteReview = (review) => {
     let {reviews, popups} = this.state;
     reviews = reviews.filter((rev) => rev.id !== review.id);
-    popups.push({message: "Review deleted", id: Math.ceil(Math.random()*100)});
+    popups.push({message: "Review deleted", id: generateId()});
     this.setState({reviews, popups});
   }
 

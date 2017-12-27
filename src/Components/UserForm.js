@@ -1,5 +1,11 @@
 import React from 'react';
 
+const max = 200, min = 0;
+
+function generateId(){
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
 class UserForm extends React.Component {
     state = {
         firstName: '',
@@ -16,7 +22,7 @@ class UserForm extends React.Component {
         const user = {
             firstName,
             lastName,
-            id: editingUser ? editingUser.id : Math.ceil(Math.random()*100),
+            id: editingUser ? editingUser.id : generateId(),
             isAdmin: editingUser ? editingUser.isAdmin : false,
             reviews: editingUser ? editingUser.reviews : []
         }
@@ -31,7 +37,7 @@ class UserForm extends React.Component {
     }
 
     handleBlur = (event) => {
-        let {errors} = this.state;
+        let {errors, firstName,lastName} = this.state;
         if (event.target.value.trim() === '') {
             errors = {
                 [event.target.name]: {
@@ -44,7 +50,7 @@ class UserForm extends React.Component {
             delete errors[event.target.name];
         }
 
-        if (Object.keys(errors).length === 0) {
+        if (Object.keys(errors).length === 0 && firstName.trim() !== '' && lastName.trim() !== '') {
             this.setState({disabled: false, errors})
         }
         else {
@@ -65,7 +71,7 @@ class UserForm extends React.Component {
 
         return (
             <form onSubmit={this.handleSubmit} autoComplete="off" id="userForm">
-                User input:
+                <span>User input:</span>
                 <div>
                     <div className={errors.firstName ? "invalid" : ""}>
                         <input
