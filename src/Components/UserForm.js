@@ -1,9 +1,6 @@
 import React from 'react';
 
-function generateId(){
-    const max = 200, min = 0;
-    return Math.floor(Math.random() * (max - min) + min);
-}
+let userId = 4;
 
 class UserForm extends React.Component {
     state = {
@@ -21,7 +18,7 @@ class UserForm extends React.Component {
         const user = {
             firstName,
             lastName,
-            id: editingUser ? editingUser.id : generateId(),
+            id: editingUser ? editingUser.id : userId++,
             isAdmin: editingUser ? editingUser.isAdmin : false,
             reviews: editingUser ? editingUser.reviews : []
         }

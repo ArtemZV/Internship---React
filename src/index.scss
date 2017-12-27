@@ -61,7 +61,7 @@ body {
 #popupsBlock{
   background-color: #1a1313;
   border-radius: 4px;
-  position: absolute;
+  position: fixed;
   right: 10px;
   top: 5%;
   width: 250px;
@@ -136,14 +136,14 @@ body {
   }
 
   thead th:first-child, > tbody > tr > td:first-child{
-      height: 32px;
+      min-height: 32px;
       border-right: 1px solid #e1e1e1;
   }
 
   td {
       width: 50%;
       max-width: 610px;
-      word-break: break-word;
+      word-break: break-all;
 
       span{
           display: inline-table;
@@ -169,7 +169,6 @@ body {
           padding: 6px;
           min-height: 32px;
           max-width: 600px;
-          height: 32px;
       }
 
       td.isNotAproved{
@@ -196,7 +195,7 @@ body {
   .tableSpan{
     display: inline-flex;
     max-width: 420px;
-    word-break: break-word;
+    word-break: break-all;
     white-space: normal;
     align-items: center;
     height: 100%;
@@ -272,10 +271,6 @@ body {
         display: block;
         margin: 0 auto;
         width: 180px;
-    }
-
-    select option:first-child{
-        color:#6b6767;
     }
 
     .invalid{

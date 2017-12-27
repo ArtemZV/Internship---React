@@ -1,10 +1,6 @@
 import React from 'react';
 
-
-function generateId(){
-    const max = 200, min = 0;
-    return Math.floor(Math.random() * (max - min) + min);
-}
+var reviewId = 6;
 
 class ReviewForm extends React.Component{
     state = {
@@ -19,7 +15,7 @@ class ReviewForm extends React.Component{
         const {reviewText, selectedUser} = this.state;
         const {onReviewCreate} = this.props;
         const review = {
-                    id: generateId(),
+                    id: reviewId++,
                     reviewText,
                     userId: parseInt(selectedUser, 10),
                     isAproved: false
