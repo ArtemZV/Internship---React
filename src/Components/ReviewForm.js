@@ -1,9 +1,9 @@
 import React from 'react';
 
-const max = 200, min = 0;
 
 function generateId(){
-  return Math.floor(Math.random() * (max - min) + min);
+    const max = 200, min = 0;
+    return Math.floor(Math.random() * (max - min) + min);
 }
 
 class ReviewForm extends React.Component{

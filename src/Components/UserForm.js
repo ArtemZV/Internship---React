@@ -1,8 +1,7 @@
 import React from 'react';
 
-const max = 200, min = 0;
-
 function generateId(){
+    const max = 200, min = 0;
     return Math.floor(Math.random() * (max - min) + min);
 }
 
@@ -40,10 +39,10 @@ class UserForm extends React.Component {
         let {errors, firstName,lastName} = this.state;
         if (event.target.value.trim() === '') {
             errors = {
+                ...errors,
                 [event.target.name]: {
                     message: "Please fill this field"
-                },
-                ...errors
+                }
             }
         }
         else {

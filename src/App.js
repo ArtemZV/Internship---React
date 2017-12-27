@@ -4,9 +4,9 @@ import UsersTable from './Components/UsersTable';
 import ReviewForm from './Components/ReviewForm';
 import PopupsBlock from './Components/PopupsBlock'
 
-const max = 200, min = 0;
 
 function generateId(){
+  const max = 200, min = 0;
   return Math.floor(Math.random() * (max - min) + min);
 }
 
@@ -45,7 +45,7 @@ class App extends Component {
     }
     else {
       users.push(user)
-      popups.push({message: "New user create", id: generateId()});
+      popups.push({message: "New user created", id: generateId()});
     }
     this.setState({editingUser: null, popups, users});
   }
@@ -53,7 +53,7 @@ class App extends Component {
   handleReviewCreated = (review) => {
     const {reviews, popups} = this.state;
     reviews.push(review);
-    popups.push({message: "New review create", id: generateId()});
+    popups.push({message: "New review created", id: generateId()});
     this.setState({review, popups});
   }
 
